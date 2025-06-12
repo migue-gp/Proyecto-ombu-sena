@@ -1,0 +1,604 @@
+/* Estilos generales */
+body {
+    font-family: "Work Sans", sans-serif;
+    color: #ffffff;
+    width: 100%;
+    /* Elimina height: 100vh; si quieres que el cuerpo se desplace */
+    margin: 0;
+    /* Elimina overflow: hidden; si quieres que el cuerpo se desplace */
+    background-image: url('/static/img/logos_o_otros/ombu_fondo.jpg')!important;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center center;
+}
+
+/* Estilos del menú superior */
+.main-menu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 20px;
+    background-color: #000000;
+    overflow: visible;
+    position: fixed;
+    top: 0;
+    width: calc(100% - 40px);
+    z-index: 1000;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.menu-left {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.menu-left a {
+    color: #00FF00;
+    text-decoration: none;
+    font-size: 24px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.menu-center {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex-grow: 1;
+    justify-content: left;
+    align-items: center;
+}
+
+.menu-center .admin-item {
+    margin: 0 10px;
+}
+
+.admin-item a {
+    color: #FFFFFF;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 10px 15px;
+    display: block;
+    transition: background-color 0.3s ease;
+    white-space: nowrap;
+}
+
+.admin-item a:hover {
+    background-color: #333333;
+    border-radius: 4px;
+}
+
+/* Estilos del botón de perfil y menú desplegable */
+.profile-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.profile-btn {
+    cursor: pointer;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    color: #FFFFFF;
+    background: none;
+    border: none;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+    border-radius: 4px;
+}
+
+.profile-btn:hover {
+    background-color: #333333;
+}
+
+.profile-btn svg {
+    width: 20px;
+    height: 20px;
+    margin-left: 8px;
+    transition: transform 0.3s ease;
+}
+
+.profile-btn.active svg {
+    transform: rotate(180deg);
+}
+
+.dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #333333;
+    min-width: 180px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    z-index: 1001;
+    border-radius: 6px;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    margin-top: 5px;
+}
+
+.dropdown.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown a {
+    color: #FFFFFF;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    transition: background-color 0.3s ease;
+    border-radius: 4px;
+    margin: 4px;
+}
+
+.dropdown a:hover {
+    background-color: #555555;
+}
+
+.dropdown a:first-child {
+    margin-top: 8px;
+}
+
+.dropdown a:last-child {
+    margin-bottom: 8px;
+    color: #ff6b6b;
+}
+
+.dropdown a:last-child:hover {
+    background-color: #ff6b6b;
+    color: #FFFFFF;
+}
+
+/* Separador en el dropdown */
+.dropdown-separator {
+    height: 1px;
+    background-color: #555555;
+    margin: 4px 12px;
+}
+
+/* Ajuste para el contenido principal */
+/* Nota: Este estilo ya estaba en mesas_principal.css, se mantuvo para evitar duplicidad y mantener el ajuste de padding. */
+.main-content {
+    padding-top: 90px;
+}
+
+/* Overlay para cerrar el dropdown */
+.dropdown-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    display: none;
+}
+
+.dropdown-overlay.show {
+    display: block;
+}
+
+/* Menú fijo superior */
+/* BOTÓN "OMBÚ */
+.button {
+    --border-right: 6px;
+    --text-stroke-color: rgba(255,255,255,0.6);
+    --animation-color: #4eff37;
+    --fs-size: 2em;
+    letter-spacing: 3px;
+    text-decoration: none;
+    font-size: var(--fs-size);
+    font-family: "Arial";
+    position: relative;
+    text-transform: uppercase;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--text-stroke-color);
+    margin: 0;
+    height: auto;
+    background: transparent;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+}
+
+.hover-text {
+    position: absolute;
+    box-sizing: border-box;
+    content: attr(data-text);
+    color: var(--animation-color);
+    width: 0%;
+    inset: 0;
+    border-right: var(--border-right) solid var(--animation-color);
+    overflow: hidden;
+    transition: 0.5s;
+    -webkit-text-stroke: 1px var(--animation-color);
+}
+
+.button:hover .hover-text {
+    width: 100%;
+    filter: drop-shadow(0 0 23px var(--animation-color))
+}
+
+/* Menú desplegable */
+.menu-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    transition: all 0.5s ease-in-out;
+    position: relative; /* Asegura que permanezca en el flujo en el escritorio inicialmente */
+    z-index: 1000;
+}
+
+/* Estilos para escritorio */
+@media (min-width: 769px) {
+    .menu-container {
+        position: fixed; /* Comienza fijo para el efecto de scroll */
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: fit-content;
+        /* Asegúrate de que estas transiciones estén presentes para la opacidad y la transformación */
+        transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+    }
+
+    .menu-container.menu-hidden {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-20px);
+        pointer-events: none; /* Evita la interacción cuando está oculto */
+    }
+}
+
+/* estilos para mobil */
+@media (max-width: 768px) {
+    .menu-container {
+        /* Se eliminó !important ya que podría causar problemas */
+        position: relative;
+        display: flex;
+        justify-content: center;
+        padding-top: 5px;
+    }
+}
+
+/* Estilos menu desplegable */
+.menu {
+    padding: 0.5rem;
+    background-color: #000000;
+    display: flex;
+    justify-content: center;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px 0 rgba(255, 0, 0, 0.075);
+    width: fit-content;
+    max-width: 100%;
+}
+
+/* Estilos menú hamburguesa para mobil */
+.hamburger-btn {
+    display: none; /* Oculto por defecto */
+    background: rgb(66, 167, 46);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+    position: fixed;
+    top: 15px;
+    left: 5%;
+    z-index: 1100;
+    transition: transform 0.2s ease;
+}
+
+.hamburger-btn:hover,
+.hamburger-btn:focus {
+    transform: scale(1.05);
+}
+
+/* iconos dentro del menu hamburguesa (mobil */
+.hamburger-btn svg {
+    width: 30px;
+    height: 30px;
+}
+
+/* Estilos menu desplegable ( despliegue caja ) */
+.link {
+    display: inline-flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 70px;
+    height: 60px;
+    border-radius: 8px;
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    transform-origin: center left;
+    transition: width 0.2s ease-in;
+    text-decoration: none;
+    color: #fff;
+    transition: all 0.2s ease-in-out;
+    will-change: width;
+}
+
+.link:before {
+    position: absolute;
+    z-index: -1;
+    content: "";
+    display: block;
+    border-radius: 8px;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    transform: translateX(100%);
+    transition: transform 0.1s ease-in;
+    transform-origin: center right;
+    background-color: #f00000;
+}
+
+/* BORDE ALREDEDOR DE LAS CAJAS (MENÚ DEPLEGABLE)*/
+.link:hover,
+.link:focus {
+    outline: 2px solid #f00000;
+    width: 130px;
+    outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+    .link:hover,
+    .link:focus {
+        width: 100%;
+    }
+}
+
+.link:hover:before,
+.link:focus:before,
+.link:hover .link-title,
+.link:focus .link-title {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+/* ICONOS DEL MENU DESPLEGABLE */
+.link-icon {
+    width: 28px;
+    height: 28px;
+    display: block;
+    flex-shrink: 0;
+    left: 18px;
+    position: relative;
+    margin-right: 10px;
+    z-index: 2;
+}
+
+/* ESTILOS ICONOS VECTORIALES (MENU DESPLEGABLE) */
+.link-icon svg {
+    width: 28px;
+    height: 28px;
+    fill: #ffffff;
+}
+
+/* TITULOS DE LOS MENUS DEPLEGABLES (CIGARRILLOS, BEBIDAS FRIAS ETC.. ) */
+.link-title {
+    transform: translateX(100%);
+    opacity: 0;
+    transition: transform 0.2s ease-in, opacity 0.2s ease-in;
+    transform-origin: center right;
+    display: flex;
+    text-align: center;
+    width: 80%;
+    flex-direction: column;
+    line-height: 1.2;
+}
+
+/* ESTILOS PARA MOBIL ( MENU DESPLEGABLE ) */
+@media (max-width: 600px) {
+    .hamburger-btn {
+        display: block; /* Muestra el botón de hamburguesa en móvil */
+    }
+
+    .menu-container {
+        padding: 10px;
+        position: relative; /* Cambiado a relativo para que la hamburguesa pueda ser fija con respecto a la ventana */
+    }
+
+    .menu {
+        position: fixed; /* Posición fija para el menú móvil */
+        top: 0;
+        left: -100%; /* Oculto por defecto */
+        flex-direction: column;
+        width: 250px;
+        height: 100vh;
+        transition: left 0.4s ease;
+        border-radius: 0;
+        padding: 70px 15px 20px 10px;
+        justify-content: flex-start;
+        z-index: 999;
+        max-width: 90%;
+        margin: 0 auto;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    .menu.active {
+        left: 0; /* Muestra el menú cuando está activo */
+    }
+
+    .link {
+        width: 100%;
+        margin-bottom: 15px;
+        height: 50px;
+    }
+
+    .link-icon {
+        left: 15px;
+    }
+
+    .link-title {
+        transform: translateX(0);
+        opacity: 1;
+        text-indent: 35px;
+        text-align: left;
+    }
+}
+
+/* Clase para evitar el scroll del cuerpo cuando el menú móvil está abierto */
+body.no-scroll {
+    overflow: hidden;
+}
+
+:root {
+    --primary-color: #1A3330;
+    --accent-color: #4eff37;
+    --footer-bg: rgba(0, 0, 0, 0.7);
+    --transition-normal: all 0.3s ease;
+    --transition-fast: all 0.2s ease;
+    --shadow-normal: 0 5px 15px rgba(0, 0, 0, 0.2);
+    --shadow-hover: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Fondo con capa oscura */
+.main-content {
+    position: relative; /* Necesario para el z-index del pseudo-elemento */
+    min-height: 150vh; /* Añadido para hacer la página desplazable para demostración */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.main-content::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Oscurece la imagen */
+    z-index: 1;
+}
+
+.main-content h1,
+.main-content p {
+    position: relative;
+    z-index: 2;
+}
+
+.main-content h1 {
+    font-size: 3rem;
+    margin: 0;
+}
+
+.main-content p {
+    font-size: 1.5rem;
+    margin: 10px 0;
+    color: rgb(255, 255, 255);
+}
+
+.admin-item span{
+    color: rgb(200, 58, 58);
+    top: 10px
+}
+
+/* CONTENEDOR DE SECCION DE PEDIDOS ------------------------------------*/
+/* Estilos básicos para las secciones de pedidos, puedes mover esto a mesas_principal.css */
+.pedidos-container {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap; /* Permite que los contenedores se envuelvan en pantallas pequeñas */
+    gap: 20px;
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.pedidos-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    width: 45%; /* Ajusta el ancho para que quepan dos en una fila */
+    box-shadow: var(--shadow-normal);
+    color: white;
+    text-align: left;
+    max-height: 600px; /* Limita la altura para el scroll */
+    overflow-y: auto; /* Habilita el scroll vertical */
+}
+
+.pedidos-card h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: var(--accent-color); /* Color de acento de tu CSS */
+}
+
+.pedido-item {
+    background-color: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 15px;
+    position: relative;
+}
+.pedido-item h4 {
+    margin-top: 0;
+    color: #f0f0f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.pedido-item p {
+    margin: 5px 0;
+    font-size: 0.9em;
+}
+.pedido-item ul {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+}
+.pedido-item ul li {
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 8px;
+    border-radius: 5px;
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85em;
+}
+.finalizar-pedido-btn-dashboard {
+    background-color: var(--accent-color);
+    color: var(--primary-color);
+    border: none;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 10px;
+}
+.finalizar-pedido-btn-dashboard:hover {
+    background-color: #39cc2c; /* Un tono más oscuro del color de acento */
+}
+.pedido-finalizado-details {
+    font-size: 0.8em;
+    color: #ccc;
+    margin-top: 10px;
+}
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .pedidos-card {
+        width: 90%; /* En móviles, cada tarjeta ocupa casi todo el ancho */
+    }
+    .pedidos-container {
+        flex-direction: column; /* Apila las tarjetas verticalmente */
+        align-items: center;
+    }
+}

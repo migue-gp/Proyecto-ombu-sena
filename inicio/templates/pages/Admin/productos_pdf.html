@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1.5cm;
+            @frame footer {
+                -pdf-frame-content: footerContent;
+                bottom: 0cm;
+                margin-left: 1.5cm;
+                margin-right: 1.5cm;
+                height: 1cm;
+            }
+        }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10pt;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+            font-size: 18pt;
+            margin-bottom: 20px;
+        }
+        .info-date {
+            text-align: right;
+            font-size: 9pt;
+            margin-bottom: 10px;
+        }
+        .product-details { /* Nuevo estilo para el cuadro de detalles */
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .product-details p {
+            margin: 8px 0;
+        }
+        .product-details strong {
+            display: inline-block;
+            width: 150px; /* Para alinear etiquetas */
+        }
+        .product-image { /* Para la imagen del producto */
+            text-align: center;
+            margin-top: 15px;
+        }
+        .product-image img {
+            max-width: 200px;
+            height: auto;
+            border: 1px solid #eee;
+            border-radius: 5px;
+        }
+        .footer {
+            width: 100%;
+            text-align: center;
+            position: fixed;
+            font-size: 8pt;
+            color: #666;
+            bottom: 0;
+            border-top: 1px solid #eee;
+            padding-top: 5px;
+        }
+        .page-number::before {
+            content: "Página " counter(page) " de " counter(pages);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <div class="info-date">
+        Fecha de Generación: {{ date }}
+    </div>
+
+    {# Mostrar la información del único producto #}
+    {% if producto %}
+        <div class="product-details">
+            <p><strong>ID del Producto:</strong> {{ producto.id }}</p>
+            <p><strong>Título:</strong> {{ producto.titulo }}</p>
+            <p><strong>Categoría:</strong> {{ producto.get_categoria_display }}</p>
+            <p><strong>Precio:</strong> ${{ producto.precio|floatformat:2 }}</p>
+            <p><strong>Cantidad Disponible:</strong> {{ producto.cantidad_disponible }}</p>
+            <p><strong>Estado:</strong> {{ producto.get_estado_display }}</p>
+            <p><strong>Descripción:</strong> {{ producto.descripcion }}</p> {# Puedes usar truncatechars si la descripción es muy larga, pero aquí la mostramos completa #}
+        </div>
+
+        {% if producto.foto %}
+        <div class="product-image">
+            {# Asegúrate de que la URL de la imagen sea correcta para xhtml2pdf #}
+            <img src="{{ MEDIA_URL }}{{ producto.foto.name }}" alt="Foto del Producto">
+            <p>Foto del Producto</p>
+        </div>
+        {% endif %}
+
+    {% else %}
+        <p style="text-align: center; color: red;">No se pudo cargar la información del producto.</p>
+    {% endif %}
+
+    <div id="footerContent">
+        <div class="footer">
+            Reporte de Producto generado por el Sistema de Gestión del Bar.
+            <br/>
+            <span class="page-number"></span>
+        </div>
+    </div>
+</body>
+</html>

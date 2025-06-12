@@ -1,0 +1,447 @@
+/* ============================================== */
+/* DISEÑO DE BARRA DE BÚSQUEDA Y FILTROS */
+/* (bar_filtros.css - Versión Mejorada)  */
+/* ============================================== */
+
+/* --- 1. Variables CSS: Centraliza y Mejora la Consistencia --- */
+:root {
+    /* Colores base y acentos */
+    --primary-color: #007bff; /* Azul vibrante para acciones principales */
+    --primary-hover: #0056b3;
+    --success-color: #28a745; /* Verde para acciones positivas */
+    --success-hover: #218838;
+    --danger-color: #dc3545; /* Rojo para acciones destructivas */
+    --danger-hover: #c82333;
+    --neutral-text-color: #333; /* Texto principal oscuro */
+    --light-text-color: #f8f9fa; /* Texto claro (para fondos oscuros) */
+    --light-bg: #f8f9fa; /* Fondo suave para la barra (casi blanco) */
+    --dark-bg: #e9ecef; /* Fondo ligeramente más oscuro para contraste */
+    --border-color: #dee2e6; /* Borde suave */
+    --disabled-bg: #e9ecef; /* Fondo para elementos deshabilitados */
+    --disabled-text: #6c757d; /* Texto para elementos deshabilitados */
+
+    /* Espaciado y dimensiones */
+    --spacing-xs: 8px;
+    --spacing-sm: 12px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+    --border-radius: 6px; /* Bordes ligeramente más redondeados */
+    --button-min-height: 40px; /* Asegura un buen tamaño para el clic/toque */
+    --input-padding: 10px 14px; /* Relleno uniforme para inputs */
+
+    /* Sombras sutiles para profundidad */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+    --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* --- 2. Contenedor Principal (search-and-filter-trigger-container) --- */
+.search-and-filter-trigger-container {
+    display: flex;
+    /* justify-content: space-between; */ /* Se ajusta con flex-grow en grupos */
+    align-items: center;
+    flex-wrap: wrap; /* Permitir que los elementos se envuelvan */
+    gap: var(--spacing-sm); /* Espacio consistente entre elementos */
+    margin-bottom: var(--spacing-lg); /* Más espacio inferior */
+    padding: var(--spacing-sm) var(--spacing-md); /* Relleno interno */
+    background-color: var(--light-bg);
+    border: 1px solid var(--border-color); /* Borde sutil */
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-sm); /* Sombra ligera para un efecto flotante */
+    min-height: 70px; /* Altura mínima para la barra */
+    transition: all 0.3s ease-in-out; /* Transiciones más suaves */
+    box-sizing: border-box; /* Incluir padding y border en el tamaño */
+    font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif; /* Fuente más legible */
+}
+
+/* --- 3. Grupo Izquierdo: Búsqueda y Filtros (search-filter-group) --- */
+.search-filter-group {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    flex-grow: 1; /* Permitir que ocupe el espacio disponible */
+    flex-wrap: wrap; /* Para envolver el buscador y el botón en móviles */
+    min-width: 0; /* Asegurar que no desborde */
+}
+
+/* --- 4. Buscador (#changelist-search) --- */
+#changelist-search {
+    flex-grow: 1; /* Ocupa el espacio disponible en su grupo */
+    max-width: 450px; /* Límite para que no sea demasiado ancho en pantallas grandes */
+    min-width: 250px; /* Mínimo para usabilidad en desktop */
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs); /* Espacio entre input y botón de búsqueda */
+}
+
+#changelist-search #toolbar {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: var(--spacing-xs);
+}
+
+#changelist-search input[type="text"] {
+    flex-grow: 1;
+    padding: var(--input-padding);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 15px; /* Tamaño de fuente ligeramente mayor */
+    height: var(--button-min-height);
+    box-sizing: border-box;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
+#changelist-search input[type="text"]:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Resaltar al enfocar */
+    outline: none;
+}
+
+#changelist-search input[type="submit"] {
+    padding: var(--input-padding);
+    background-color: var(--primary-color);
+    color: var(--light-text-color);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 15px;
+    white-space: nowrap;
+    height: var(--button-min-height);
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, transform 0.1s ease; /* Efecto al hacer click */
+    min-width: 44px; /* Mínimo para accesibilidad móvil */
+    display: flex; /* Para centrar contenido si hubiera ícono */
+    align-items: center;
+    justify-content: center;
+}
+
+#changelist-search input[type="submit"]:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px); /* Sutil elevación */
+}
+#changelist-search input[type="submit"]:active {
+    transform: translateY(0); /* Vuelve a posición original */
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2); /* Efecto de hundimiento */
+}
+
+
+/* --- 5. Botón de Filtros (custom-filter-button) --- */
+.custom-filter-button {
+    background-color: var(--primary-color) !important; /* ¡Mantén el color principal! */
+    color: var(--light-text-color);
+    padding: var(--input-padding);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-xs);
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    white-space: nowrap;
+    height: var(--button-min-height);
+    box-sizing: border-box;
+    min-width: 44px;
+    flex-shrink: 0;
+    font-weight: 500; /* Texto un poco más grueso */
+    box-shadow: var(--shadow-sm); /* Sombra para destacarlo */
+}
+
+.custom-filter-button:hover {
+    background-color: var(--primary-hover);
+    transform: translateY(-1px);
+}
+.custom-filter-button:active {
+    transform: translateY(0);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.custom-filter-button img {
+    filter: invert(1); /* Asegura que el icono sea blanco sobre fondo de color */
+    margin-right: 4px; /* Un poco de espacio entre icono y texto */
+}
+
+/* --- 6. Contenedor de Botones de Acción (object-tools) --- */
+/* Estilos para todos los ul.object-tools */
+.search-and-filter-trigger-container > ul.object-tools {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    flex-shrink: 0;
+    flex-wrap: wrap; /* Permitir que los botones se envuelvan */
+    margin-left: auto; /* Empujar este grupo a la derecha */
+}
+
+/* Elementos de lista dentro de object-tools */
+.search-and-filter-trigger-container .object-tools li {
+    display: flex;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    /* Flex-basis para control más fino en responsive */
+    flex-basis: auto;
+}
+
+/* --- 7. Botón de Añadir (addlink) --- */
+.search-and-filter-trigger-container .object-tools .addlink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 25px 10px 10px !important;
+    background-color: var(--success-color) !important;
+    color: var(--light-text-color);
+    text-decoration: none;
+    border-radius: var(--border-radius);
+    font-weight: 500;
+    font-size: 15px;
+    white-space: nowrap;
+    border: none;
+    cursor: pointer;
+    height: var(--button-min-height);
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    min-width: 44px;
+    box-shadow: var(--shadow-sm);
+}
+
+.search-and-filter-trigger-container .object-tools .addlink:hover {
+    background-color: var(--success-hover);
+    transform: translateY(-1px);
+}
+.search-and-filter-trigger-container .object-tools .addlink:active {
+    transform: translateY(0);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* --- 8. Botón de Eliminar (delete-button-global) --- */
+.button-delete-button-global { /* Renombrado para evitar conflicto si ya existía */
+    background-color: var(--danger-color);
+    color: var(--light-text-color);
+    padding: var(--input-padding);
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    white-space: nowrap;
+    height: var(--button-min-height);
+    box-sizing: border-box;
+    min-width: 44px;
+    font-weight: 500;
+    box-shadow: var(--shadow-sm);
+}
+
+.button-delete-button-global:hover:not(:disabled) {
+    background-color: var(--danger-hover);
+    transform: translateY(-1px);
+}
+.button-delete-button-global:active:not(:disabled) {
+    transform: translateY(0);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.button-delete-button-global:disabled {
+    background-color: var(--disabled-bg);
+    color: white;
+    cursor: not-allowed;
+    box-shadow: none; /* Eliminar sombra cuando está deshabilitado */
+    transform: none; /* No animar si está deshabilitado */
+}
+
+/* --- 9. Botón de Reporte PDF (Específico para Productos) --- */
+/* Asume que tienes un <a> con clase `addlink` y un estilo inline.
+   Es mejor mover el estilo inline a CSS para consistencia. */
+.search-and-filter-trigger-container .object-tools .report-pdf-link {
+    background-color: #17a2b8; /* Un color secundario agradable, por ejemplo */
+    color: white;
+    padding: var(--input-padding);
+    border-radius: var(--border-radius);
+    text-decoration: none;
+    display: inline-flex; /* Usar flex para alinear ícono y texto */
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-xs);
+    font-weight: 500;
+    font-size: 15px;
+    height: var(--button-min-height);
+    box-sizing: border-box;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    white-space: nowrap;
+    box-shadow: var(--shadow-sm);
+}
+
+.search-and-filter-trigger-container .object-tools .report-pdf-link:hover {
+    background-color: #138496; /* Tono más oscuro al pasar el ratón */
+    transform: translateY(-1px);
+}
+.search-and-filter-trigger-container .object-tools .report-pdf-link:active {
+    transform: translateY(0);
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+}
+
+/* Icono dentro del botón de PDF */
+.report-pdf-link .fa-file-pdf { /* Asegúrate de que FontAwesome esté cargado */
+    margin-right: 5px; /* Espacio entre icono y texto */
+    color: white;
+}
+
+/* --- 10. MEDIA QUERIES MEJORADAS PARA RESPONSIVIDAD --- */
+
+/* Tablets grandes y pantallas medianas (de 992px a 1200px) */
+@media screen and (max-width: 1200px) {
+    .search-and-filter-trigger-container {
+        padding: var(--spacing-sm);
+        gap: var(--spacing-sm);
+    }
+    #changelist-search {
+        max-width: 350px;
+        min-width: 200px;
+    }
+}
+
+/* Tablets (de 768px a 991px) */
+@media screen and (max-width: 991px) {
+    .search-and-filter-trigger-container {
+        flex-direction: column; /* Apila elementos verticalmente */
+        align-items: stretch; /* Estira los elementos para ocupar el ancho */
+        gap: var(--spacing-md); /* Más espacio entre secciones apiladas */
+        padding: var(--spacing-md);
+        min-height: auto;
+    }
+
+    .search-filter-group {
+        width: 100%; /* Ocupa todo el ancho disponible */
+        justify-content: flex-start;
+        flex-wrap: wrap; /* Permitir que los elementos internos se envuelvan */
+        gap: var(--spacing-sm);
+    }
+
+    #changelist-search {
+        flex-grow: 1; /* Permite que el buscador crezca */
+        max-width: none; /* Elimina la restricción de ancho máximo */
+        min-width: unset; /* Reinicia el mínimo */
+        order: 1; /* Coloca el buscador primero */
+    }
+
+    .custom-filter-button {
+        order: 2; /* Coloca el botón de filtro después del buscador */
+        flex: 1 1 auto; /* Permite que el botón se ajuste y ocupe espacio */
+        justify-content: center; /* Centra el texto y el icono */
+    }
+
+    .search-and-filter-trigger-container > ul.object-tools {
+        margin-left: 0; /* Elimina el margen auto */
+        width: 100%; /* Ocupa todo el ancho */
+        justify-content: center; /* Centra los botones de acción */
+        order: 3; /* Coloca los botones de acción al final */
+        gap: var(--spacing-sm);
+    }
+
+    .search-and-filter-trigger-container .object-tools li {
+        flex: 1 1 auto; /* Permite que los botones de acción se ajusten */
+        max-width: 48%; /* Dos columnas en tablets */
+    }
+    .search-and-filter-trigger-container .object-tools .addlink,
+    .button-delete-button-global,
+    .report-pdf-link {
+        width: 100%; /* Asegura que los botones ocupen el ancho de su li */
+        justify-content: center;
+    }
+}
+
+/* Móviles (hasta 767px) */
+@media screen and (max-width: 767px) {
+    .search-and-filter-trigger-container {
+        padding: var(--spacing-sm);
+        gap: var(--spacing-md);
+    }
+
+    .search-filter-group {
+        flex-direction: column; /* Apila buscador y botón de filtro */
+        align-items: stretch;
+        gap: var(--spacing-sm);
+    }
+
+    #changelist-search {
+        width: 100%;
+        margin-bottom: 0; /* Ya no hay espacio extra */
+    }
+
+    #changelist-search #toolbar {
+        flex-direction: column; /* Apila input y botón de búsqueda */
+        align-items: stretch;
+        gap: var(--spacing-xs);
+    }
+    
+    #changelist-search input[type="text"],
+    #changelist-search input[type="submit"] {
+        width: 100%;
+        min-width: unset;
+    }
+
+    .custom-filter-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .search-and-filter-trigger-container > ul.object-tools {
+        flex-direction: column; /* Apila todos los botones de acción */
+        gap: var(--spacing-xs);
+    }
+    
+    .search-and-filter-trigger-container .object-tools li {
+        width: 100%; /* Un botón por línea */
+        max-width: none;
+    }
+    
+    .search-and-filter-trigger-container .object-tools .addlink,
+    .button-delete-button-global,
+    .report-pdf-link {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* --- 11. Mejoras para Accesibilidad y UX --- */
+@media (prefers-reduced-motion: reduce) {
+    .search-and-filter-trigger-container,
+    .custom-filter-button,
+    .search-and-filter-trigger-container .object-tools .addlink,
+    .button-delete-button-global,
+    .report-pdf-link,
+    #changelist-search input[type="submit"] {
+        transition: none !important; /* Desactiva todas las transiciones */
+    }
+}
+
+/* Modo oscuro (si es compatible) */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --light-bg: #212529; /* Fondo más oscuro para la barra */
+        --dark-bg: #343a40; /* Ligero contraste */
+        --border-color: #495057;
+        --neutral-text-color: #f8f9fa; /* Texto claro */
+        --disabled-bg: #495057;
+        --disabled-text: #adb5bd;
+    }
+
+    #changelist-search input[type="text"] {
+        background-color: #343a40;
+        color: var(--light-text-color);
+        border-color: var(--border-color);
+    }
+    #changelist-search input[type="text"]::placeholder {
+        color: #adb5bd;
+    }
+}

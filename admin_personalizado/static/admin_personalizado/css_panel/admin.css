@@ -1,0 +1,742 @@
+
+
+/* Barra superior personalizada */
+#header {
+    background-color: #2c3e50; /* Un tono más oscuro y moderno */
+    color: white;
+    width: 100%;
+    padding: 15px 0; /* Aumentar el padding vertical */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3); /* Sombra más pronunciada para profundidad */
+    z-index: 1000; /* Asegura que esté sobre otros elementos */
+    position: relative; /* Para que la sombra se vea correctamente */
+}
+
+#header a:link, #header a:visited {
+    color: white !important;
+}
+
+
+/* Contenedor de la barra */
+.navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1400px; /* Un poco más de ancho */
+    margin: 0 auto;
+    padding: 0 30px; /* Más padding horizontal */
+}
+
+.navbar .main-nav li{
+    list-style-type: none;
+}
+
+/* Logo/título */
+.brand {
+    font-size: 28px; /* Tamaño de fuente más grande */
+    font-weight: bold;
+    letter-spacing: 1.5px; /* Espaciado entre letras */
+    text-transform: uppercase; /* Texto en mayúsculas */
+}
+
+.brand #site-name a {
+    color: #4CAF50 !important; /* Color verde vibrante para el nombre del sitio */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+
+.brand #site-name a:hover {
+    color: #8BC34A !important; /* Tono de verde diferente al pasar el cursor */
+}
+
+
+/* Menú principal */
+.main-nav {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 25px; /* Espaciado moderno entre los elementos del menú */
+}
+
+
+.main-nav li {
+    position: relative;
+}
+
+
+.main-nav a {
+    padding: 10px 15px;
+    border-radius: 6px; /* Bordes más redondeados */
+    transition: all 0.3s ease;
+    font-weight: 600; /* Un poco más de negrita */
+    color: #ecf0f1; /* Color de texto claro */
+    text-decoration: none;
+    display: block; /* Para que el padding y el hover se apliquen a todo el área */
+}
+
+
+.main-nav a:hover {
+    background-color: rgba(76, 175, 80, 0.2); /* Fondo verde semitransparente al pasar el cursor */
+    color: #4CAF50 !important; /* Resaltar el texto al pasar el cursor */
+    transform: translateY(-3px); /* Pequeño efecto de elevación */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2); /* Sombra al pasar el cursor */
+}
+
+
+/* Submenú desplegable */
+.submenu {
+    display: none;
+    position: absolute;
+    background-color: #34495e; /* Fondo del submenú */
+    min-width: 220px;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+    z-index: 1050;
+    border-radius: 6px;
+    padding: 5px 0;
+    top: 100%; /* Posiciona debajo del elemento padre */
+    left: 0;
+}
+
+
+.main-nav li:hover .submenu {
+    display: block;
+}
+
+
+.submenu a {
+    padding: 1px 20px;
+    display: block;
+    border-bottom: 1px solid rgba(255,255,255,0.1); /* Separador sutil */
+    color: #ecf0f1;
+}
+
+.submenu a:last-child {
+    border-bottom: none; /* Quita el borde del último elemento */
+}
+
+
+.submenu a:hover {
+    background-color: #4CAF50; /* Fondo verde al pasar el cursor en el submenú */
+    color: white !important;
+    transform: none; /* Desactiva la transformación para el submenú */
+    box-shadow: none;
+}
+
+
+
+/*--------------------------------- estilos para el contenido main ----------------------------------------*/
+
+
+#content-main .form-row{
+    color: rgb(0, 0, 0);
+}
+
+#content-start #content .colM{
+    background-color: white;
+}
+
+
+#content .colM p{
+    background-color: white;
+}
+
+#content h1{
+    color: rgb(255, 255, 255);
+}
+
+#content-start {
+    color: rgb(0, 0, 0);
+}
+
+#content-start #content h2{
+    color: black;
+    background-color: white;
+}
+
+
+#content-start #content ul{
+    background-color: rgb(255, 255, 255); /*aca hice un cambio de color que en teoria se deberai aplicar al filtro en usuarios si no funciona volverlo negro otravez*/
+    
+}
+
+
+
+#changelist{
+    border-collapse: collapse;
+    border: 2px solid #333; /* Mantiene el borde */
+    border-radius: 10px; /* Agrega bordes redondeados (ajusta el valor según el radio que desees) */
+    overflow: hidden; /* Importante para que el border-radius se aplique correctamente en las celdas */
+}
+
+
+/* --------------------------------------------------alerts ------------------*/
+
+ .content-main #usuario_form p{
+    color: rgb(10, 10, 10);
+}
+
+
+#usuario_form .errornote {
+    color: black;
+}
+
+
+
+
+
+
+/*------------------------------------- cambio de filas --------------------------------------------------------*/
+/* Estilos para las tablas */
+
+.actions {
+    width: 100%; /* Igualar el ancho de la tabla */
+    box-sizing: border-box; /* Asegurar que el padding no afecte el ancho total */
+    
+}
+
+
+#changelist table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+/* Encabezados de la tabla */
+#changelist th {
+    background-color: #24a119;  /* Verde más oscuro para encabezados */
+    color: white;
+    padding: 12px 8px;
+    font-weight: bold;
+    text-align: left;
+}
+
+
+/* Filas de la tabla */
+#changelist tr {
+    transition: background-color 0.3s;
+}
+
+/* Filas pares */
+#changelist tr:nth-child(even) {
+    background-color: #e0f2e0;  /* Verde claro para filas pares */
+}
+
+/* Filas al pasar el mouse */
+#changelist tr:hover {
+    background-color: #c6e6c6;  /* Verde más saturado al pasar el mouse */
+}
+
+/* Celdas de la tabla */
+#changelist td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Checkbox en la tabla */
+#changelist input[type="checkbox"] {
+    transform: scale(1.2);
+    margin: 0 auto;
+    display: block;
+}
+
+/* Estilo para usarios activos (el icono verde) */
+#changelist .field-is_active img {
+    filter: brightness(0) saturate(100%) invert(72%) sepia(24%) 
+            saturate(2152%) hue-rotate(72deg) brightness(92%) contrast(87%);
+}
+
+/* Incrementar el espacio entre filas */
+#changelist tbody tr {
+    height: 48px;
+}
+
+/* Estilos para los enlaces */
+#changelist a {
+    color: #2b5329;
+    text-decoration: none;
+}
+
+#changelist a:hover {
+    text-decoration: underline;
+}
+
+
+
+#result_list {
+    width: 100%;
+    border-collapse: collapse;
+    border: 2px solid #333; /* Mantiene el borde */
+    border-radius: 10px; /* Agrega bordes redondeados (ajusta el valor según el radio que desees) */
+    overflow: hidden; /* Importante para que el border-radius se aplique correctamente en las celdas */
+}
+
+/* Corregir alineación específica para la tabla de reservas */
+#result_list tbody th.field-__str__ {
+    font-weight: normal;  /* Quitar negrita por defecto de th */
+    text-align: left;     /* Alinear texto a la izquierda */
+    padding: 12px ;   /* Padding consistente */
+    background-color: #138213;  /* Color de fondo verde */
+    color: white;         /* Texto en blanco */
+    vertical-align: middle;  /* Alineación vertical */
+}
+
+/* Estilo para las celdas de checkbox */
+#result_list td.action-checkbox {
+    padding: 12px;
+    text-align: center;
+    vertical-align: middle;
+    width: 40px;  /* Ancho fijo para columna de checkbox */
+    background-color: #5cb85c;  /* Mismo color que las otras celdas */
+}
+
+/* Estilo para el texto dentro del las filas*/
+#result_list tbody td{
+    color: black;
+}
+
+
+
+/* Estilo para la fila de encabezado */
+#result_list thead th {
+    background-color: #4c9545;  /* Verde más oscuro para encabezados */
+    color: white;
+    padding: 12px 15px;
+    font-weight: bold;
+    text-align: left;
+}
+
+
+/* Estilo para la columna de encabezado de checkbox */
+#result_list thead th.action-checkbox-column {
+    width: 40px;  /* Mismo ancho que las celdas de checkbox */
+    padding: 12px;
+    text-align: center;
+}
+
+/* Asegurar altura consistente */
+#result_list tr {
+    height: 48px;
+}
+
+/* Hover sobre las filas */
+#result_list tbody tr:hover th.field-__str__,
+#result_list tbody tr:hover td.action-checkbox {
+    background-color: #449d44;  /* Verde más oscuro al pasar el mouse */
+}
+
+/* Estilo para los enlaces dentro de las celdas */
+#result_list tbody th.field-__str__ a {
+    color: white;
+    text-decoration: none;
+    display: block;  /* Hacer que el enlace ocupe toda la celda */
+}
+
+#result_list tbody th.field-__str__ a:hover {
+    text-decoration: underline;
+}
+
+/*--------------------------------------------------- Barra de filtros a la derecha ------------------------------------------*/
+.filter {
+    background-color: #f0f8f0;
+    border-radius: 4px;
+    border: 1px solid #c6e6c6;
+}
+
+.filter h3 {
+    background-color: #4c9545;
+    color: white;
+    padding: 8px 12px;
+    margin: 0;
+    border-radius: 4px 4px 0 0;
+}
+
+/* Estilo general del fondo */
+body {
+    background-color: #f8fef8;
+}
+
+/* Barra superior verde */
+#header {
+    background-color: #000000;
+    color: white;
+}
+
+
+
+
+
+/*breadcrumb*/
+/* ===== ESTILOS PARA BREADCRUMB PERSONALIZADO ===== */
+.breadcrumbs {
+    background-color: #4d4b4b !important; /* Un fondo blanco suave o un gris claro */
+    padding: 15px 30px; /* Más padding para mayor espacio */
+    margin: 0; /* Eliminar margen si lo tiene por defecto */
+    border-bottom: 1px solid #ddd; /* Un borde inferior sutil */
+    font-family: 'Open Sans', sans-serif; /* Fuente más moderna */
+    box-shadow: inset 0 -1px 3px rgba(0,0,0,0.05); /* Sombra interna sutil */
+    color: #555; /* Color de texto más suave */
+    font-size: 16px; /* Tamaño de fuente ajustado */
+    display: flex; /* Para alinear los elementos */
+    align-items: center;
+}
+
+.breadcrumbs a {
+    color: #007bff !important; /* Azul más estándar para enlaces */
+    text-decoration: none;
+    font-weight: 500; /* Peso de fuente normal */
+    transition: all 0.2s ease-in-out;
+    padding: 5px 8px; /* Padding para el área del enlace */
+    border-radius: 4px; /* Bordes redondeados */
+}
+
+.breadcrumbs a:hover {
+    color: #0056b3 !important; /* Tono de azul más oscuro al pasar el cursor */
+    background-color: rgba(0,123,255,0.05); /* Fondo azul semitransparente al pasar el cursor */
+    text-decoration: none;
+}
+
+
+.breadcrumbs span.sep { /* Si usas un <span> para el separador */
+    color: #0056b3  ;
+    margin: 0 8px;
+    font-weight: normal;
+}
+
+
+.breadcrumbs a:first-child {
+    margin-left: -8px;
+}
+
+
+.breadcrumbs > a + a:before,
+.breadcrumbs > span + a:before,
+.breadcrumbs > a + span:before {
+    content: "›"; /* Utiliza el carácter de comilla angular */
+    color: #b8262600; /* Color más sutil para el separador */
+    padding: 0 8px; /* Espaciado alrededor del separador */
+}
+
+
+.breadcrumbs .current {
+    color: #0056b3; /* Color más oscuro para el elemento actual */
+    font-weight: 600; /* Más negrita para resaltarlo */
+}
+
+
+/* Estilos para el botón de hamburguesa */
+.hamburger-menu {
+    display: none; /* Oculto por defecto en pantallas grandes */
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.8em;
+    cursor: pointer;
+    padding: 10px;
+}
+
+
+/*------------------------- user-tools -------------------------------------------*/
+/* Estilo para la barra superior de usuario */
+#user-tools {
+    background-color: #000000;  /* Fondo oscuro */
+    color: rgb(175, 164, 164);  /* Texto blanco */
+    padding: 8px 15px;  /* Más espacio alrededor */
+    font-size: 14px;  /* Tamaño de texto */
+    font-weight: bold;
+}
+
+/* Enlaces en la barra de usuario */
+#user-tools a {
+    color: #4CAF50;  /* Enlaces en verde */
+    text-decoration: none;  /* Sin subrayado */
+    margin: 0 5px;  /* Espacio entre enlaces */
+    font-weight: bold;  /* Texto en negrita */
+}
+
+#user-tools a:hover {
+    color: #8BC34A;  /* Color al pasar el mouse */
+    text-decoration: underline;  /* Subrayado al pasar el mouse */
+}
+
+#user-tools .theme-toggle{
+    filter: invert(100%);
+}
+
+/* --- Media Queries para responsividad en admin.css --- */
+
+/* Puntos de quiebre comunes:
+   - Escritorio: > 992px
+   - Tablet: 769px a 992px
+   - Móvil: <= 768px
+*/
+
+@media screen and (max-width: 992px) {
+    /* Ajustes para pantallas de tablet */
+    .navbar {
+        padding: 0 20px; /* Reducir padding horizontal del navbar */
+    }
+
+    .brand {
+        font-size: 24px; /* Reducir tamaño de fuente del logo */
+    }
+
+    .main-nav li {
+        margin-left: 20px; /* Reducir espacio entre elementos del menú */
+    }
+
+    #sidebar {
+        width: 220px; /* Reducir ancho del sidebar en tablets */
+    }
+
+    #container, #footer {
+        margin-left: 220px; /* Ajustar margen del contenido y footer */
+    }
+}
+
+@media screen and (max-width: 768px) {
+    /* Ajustes para pantallas de móvil */
+
+    /* Header: Ajustar padding y ocultar navegación principal */
+    #header {
+        padding: 10px 0;
+    }
+
+    .navbar {
+        padding: 0 15px; /* Más compacto */
+    }
+
+    .brand {
+        font-size: 22px; /* Más pequeño para móviles */
+    }
+
+    /* Ocultar la navegación principal y mostrar el botón de hamburguesa */
+    .main-nav {
+        display: none;
+    }
+
+    .menu-toggle {
+        display: block; /* Mostrar el botón de hamburguesa */
+    }
+
+    /* Sidebar: Ocultar el sidebar por defecto en móvil */
+    #sidebar {
+        transform: translateX(-100%); /* Ocultar el sidebar completamente */
+        width: 100%; /* Ocupar todo el ancho al mostrarse (si se usa JS) */
+        top: 0; /* Ajustar top si el header cambia de altura */
+        /* Para un menú que se desliza por encima del contenido */
+        /* Si se va a mostrar con JS, se podría agregar una clase 'sidebar-open' */
+        /* .sidebar-open { transform: translateX(0); } */
+    }
+
+    /* Contenido y Footer: Eliminar el margen izquierdo cuando el sidebar está oculto */
+    #container, #footer {
+        margin-left: 0;
+        min-height: calc(100vh - 80px); /* Ajustar min-height si el header es más pequeño */
+    }
+
+    #content {
+        padding: 15px; /* Reducir padding del contenido */
+        border-left: none; /* Eliminar el borde izquierdo si no hay sidebar fijo */
+    }
+
+    /* Ajustes para el footer en móvil */
+    #footer {
+        padding: 10px 15px;
+        font-size: 0.9em;
+    }
+
+    .navbar {
+        flex-wrap: wrap; /* Permite que los elementos se envuelvan */
+        justify-content: space-between; /* Asegura espacio entre el brand y el botón */
+        padding: 10px 20px; /* Ajusta el padding para móviles */
+    }
+
+    .hamburger-menu {
+        display: block; /* Muestra el botón de hamburguesa */
+    }
+
+    .main-nav {
+        flex-direction: column; /* Apila los elementos del menú verticalmente */
+        width: 100%; /* Ocupa todo el ancho */
+        display: none; /* Oculta el menú por defecto */
+        background-color: #2c3e50; /* Fondo para el menú desplegable */
+        position: absolute;
+        top: 100%; /* Debajo de la barra superior */
+        left: 0;
+        right: 0;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        z-index: 999; /* Asegura que esté sobre otros elementos */
+    }
+
+    .main-nav.active {
+        display: flex; /* Muestra el menú cuando tiene la clase 'active' */
+    }
+
+    .main-nav li {
+        width: 100%; /* Asegura que cada elemento ocupe todo el ancho */
+        text-align: center; /* Centra el texto del menú */
+    }
+
+    .main-nav li a {
+        padding: 15px 0; /* Más padding para los elementos del menú */
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05); /* Separador suave */
+    }
+
+    .main-nav li:last-child a {
+        border-bottom: none; /* Elimina el borde del último elemento */
+    }
+
+}
+
+/* Si implementas un menú hamburguesa con JS, necesitarás una clase para mostrar el sidebar */
+/* Ejemplo:
+.sidebar-open #sidebar {
+    transform: translateX(0);
+}
+.sidebar-open #container, .sidebar-open #footer {
+    margin-left: 100%; // O el ancho del sidebar si se desliza encima
+}
+*/
+
+/*boton eliminar--------------------------*/
+/* Estilos para el botón global de eliminar y ocultar acciones de Django */
+.button-delete-button-global {
+    background-color: #f5182e !important; /* Rojo de Bootstrap para peligro/eliminar */
+    color: white;
+    border: none;
+    /* Ajusta el padding para que sea similar al addlink si es necesario */
+    padding: 11px 18px 8px 10px !important; /* Un poco menos de padding horizontal que addlink si addlink es 25px */
+    border-radius: 5px; /* Consistente con addlink */
+    cursor: pointer;
+    font-size: 14px; /* O puedes dejarlo igual que addlink si quieres */
+    transition: background-color 0.3s ease;
+    margin-left: 10px; /* Espacio con el botón de añadir */
+    line-height: normal; /* Consistente con addlink */
+    height: auto; /* Consistente con addlink, dejar que el padding defina la altura */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    margin-bottom: 1px;
+}
+
+.button.delete-button-global:hover:not(:disabled) {
+    background-color: #c82333; /* Rojo más oscuro al pasar el ratón */
+}
+
+.button.delete-button-global:disabled {
+    background-color: #e0a8ad; /* Color más claro cuando está deshabilitado */
+    cursor: not-allowed;
+    opacity: 0.6; /* Un poco de opacidad para indicar inhabilitación */
+}
+
+/* Ocultar completamente la sección de acciones de Django Admin */
+div.actions {
+    display: none !important;
+}
+
+/* Asegurar que cualquier contenedor de acciones con la clase 'action-form-container' también se oculte */
+ul.object-tools:has(> .action-form-container) {
+    display: none !important;
+}
+
+
+body.popup #changelist-search {
+    /* Ajustes generales para el contenedor del buscador dentro del popup */
+    padding: 0; /* Eliminar padding extra del contenedor principal del buscador */
+    margin-bottom: 8px; /* Espacio debajo del buscador y la tabla */
+    background-color: transparent; /* Fondo transparente si el modal ya tiene color */
+    border: none; /* Sin borde para una apariencia más limpia en el modal */
+    box-shadow: none; /* Sin sombra para el contenedor del buscador en el modal */
+}
+
+body.popup #changelist-search #toolbar {
+    /* El div #toolbar que contiene el formulario del buscador */
+    padding: 0; /* Quitar padding interno si lo tiene */
+    margin: 0; /* Quitar márgenes */
+}
+
+body.popup #changelist-search form#changelist-search {
+    /* El formulario de búsqueda en sí */
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Espacio más compacto entre los elementos */
+    background-color: #e9ecef; /* Un fondo gris claro para que se note más del blanco */
+    padding: 8px; /* Pequeño padding dentro del formulario */
+    border-radius: 4px; /* Bordes redondeados */
+    border: 1px solid #ced4da; /* Un borde ligeramente más oscuro */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* Sombra más pronunciada para profundidad */
+}
+
+body.popup #changelist-search label img {
+    /* Estilo para el icono de lupa. Lo hacemos un poco más pequeño y visible. */
+    width: 16px;
+    height: 16px;
+    vertical-align: middle;
+    margin-right: 3px; /* Espacio entre el icono y el input */
+    filter: brightness(0) saturate(100%) invert(26%) sepia(8%) saturate(735%) hue-rotate(170deg) brightness(98%) contrast(93%); /* Color oscuro */
+}
+
+body.popup #changelist-search input[type="text"] {
+    /* Input de texto más pequeño y ajustado para el modal */
+    flex-grow: 1;
+    max-width: 180px; /* Ancho máximo para el input en el modal, hazlo más pequeño */
+    padding: 5px 8px; /* Padding más compacto */
+    font-size: 13px; /* Fuente más pequeña */
+    height: 28px; /* Altura más pequeña */
+    border: 1px solid #c8c8c8;
+    border-radius: 3px;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.05);
+    background-color: white; /* Mantener el input blanco para contraste */
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+body.popup #changelist-search input[type="text"]:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    background-color: white;
+}
+
+body.popup #changelist-search input[type="submit"] {
+    /* Botón de búsqueda más pequeño y compacto para el modal */
+    padding: 5px 12px; /* Padding reducido para el botón */
+    font-size: 13px; /* Fuente más pequeña */
+    height: 28px; /* Misma altura que el input para alineación */
+    border-radius: 3px;
+    background-color: #28a745; /* Un verde más agradable */
+    color: white; /* Color de texto blanco para el botón */
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    white-space: nowrap; /* Evita que el texto del botón se divida */
+}
+
+body.popup #changelist-search input[type="submit"]:hover {
+    background-color: #218838; /* Verde más oscuro al hover */
+}
+
+body.popup #changelist-search input[type="submit"]:active {
+    background-color: #1e7e34;
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+body.popup #changelist-search form#changelist-search > div {
+    display: flex;
+    align-items: center; /* Alinea los ítems verticalmente al centro */
+    gap: 5px; /* Espacio entre la lupa, el input y el botón */
+    width: 100%; /* Asegura que este div ocupe todo el ancho disponible */
+}
+
+body.popup #changelist-search label {
+    display: flex; /* Usar flex para alinear la imagen */
+    align-items: center; /* Centrar la imagen verticalmente */
+    height: 28px; /* Misma altura que el input/botón para alineación visual */
+}
+
+body.popup #changelist-search input[type="text"] {
+    flex-grow: 1;
+    max-width: 180px; /* Mantén el ancho deseado */
+    height: 28px; /* Asegura la altura */
+}

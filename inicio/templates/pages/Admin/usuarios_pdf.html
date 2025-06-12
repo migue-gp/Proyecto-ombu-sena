@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <style>
+        /* Tus estilos CSS existentes */
+        @page {
+            size: A4;
+            margin: 1.5cm;
+            @frame footer {
+                -pdf-frame-content: footerContent;
+                bottom: 0cm;
+                margin-left: 1.5cm;
+                margin-right: 1.5cm;
+                height: 1cm;
+            }
+        }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10pt;
+            color: #333;
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+            font-size: 18pt;
+            margin-bottom: 20px;
+        }
+        .info-date {
+            text-align: right;
+            font-size: 9pt;
+            margin-bottom: 10px;
+        }
+        .user-details { /* Nuevo estilo para el cuadro de detalles */
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .user-details p {
+            margin: 8px 0;
+        }
+        .user-details strong {
+            display: inline-block;
+            width: 120px; /* Para alinear etiquetas */
+        }
+        .footer {
+            width: 100%;
+            text-align: center;
+            position: fixed;
+            font-size: 8pt;
+            color: #666;
+            bottom: 0;
+            border-top: 1px solid #eee;
+            padding-top: 5px;
+        }
+        .page-number::before {
+            content: "Página " counter(page) " de " counter(pages);
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <div class="info-date">
+        Fecha de Generación: {{ date }}
+    </div>
+
+    {# Mostrar la información del único usuario #}
+    {% if usuario %}
+        <div class="user-details">
+            <p><strong>ID:</strong> {{ usuario.id }}</p>
+            <p><strong>Usuario:</strong> {{ usuario.username }}</p>
+            <p><strong>Nombre:</strong> {{ usuario.first_name }}</p>
+            <p><strong>Apellido:</strong> {{ usuario.last_name }}</p>
+            <p><strong>Email:</strong> {{ usuario.email }}</p>
+            <p><strong>Rol:</strong> {{ usuario.get_rol_display }}</p>
+            <p><strong>Activo:</strong> {% if usuario.is_active %}Sí{% else %}No{% endif %}</p>
+            <p><strong>Fecha Registro:</strong> {{ usuario.date_joined|date:"Y-m-d H:i" }}</p>
+            <p><strong>Último Login:</strong> {{ usuario.last_login|date:"Y-m-d H:i"|default:"Nunca" }}</p>
+        </div>
+    {% else %}
+        <p style="text-align: center; color: red;">No se pudo cargar la información del usuario.</p>
+    {% endif %}
+
+    <div id="footerContent">
+        <div class="footer">
+            Reporte de Usuario generado por el Sistema de Gestión del Bar.
+            <br/>
+            <span class="page-number"></span>
+        </div>
+    </div>
+</body>
+</html>

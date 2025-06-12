@@ -1,0 +1,181 @@
+{% load static %}
+{% csrf_token %}
+{% load custom_tags %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesas - Gastro Bar</title>
+    <link rel="stylesheet" href="{% static 'css/mesas.css' %}">
+    <link rel="stylesheet" href="{% static 'css/mesas_principal.css' %}">
+
+    
+</head>
+<body>
+ <!-- Menú superior -->
+        <nav class="main-menu">
+            <div class="menu-left">
+                <a href="{% url 'mesero_principal' %}">OMBÚ CAFÉ</a>
+            </div>
+            
+            {% if user.is_authenticated %}
+            <ul class="menu-center">
+                <li class="admin-item"><a href="{% url 'mesero_principal' %}">Inicio</a></li>
+                <li class="admin-item"><a href="{% url 'bebidas_calientes' %}">Productos</a></li>
+                <li class="admin-item"><a href="{% url 'mesas' %}">Mesas</a></li>
+            </ul>
+            {% endif %}
+        
+            <div class="profile-container">
+                <button class="profile-btn" id="profileBtn" onclick="toggleDropdown()">
+                    Perfil
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="6,9 12,15 18,9"></polyline>
+                    </svg>
+                </button>
+                <div id="profileDropdown" class="dropdown">
+                    <a href="{% url 'perfil_mesero' %}"> 
+                        <svg style="width: 16px; height: 16px; margin-right: 8px; display: inline-block;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="6" r="4"></circle>
+                            <path d="M12 14c-3.3 0-6 2.7-6 6h12c0-3.3-2.7-6-6-6z"></path>
+                        </svg>
+                        Ver Perfil
+                    </a>
+                    <div class="dropdown-separator"></div>
+                    <a href="{% url 'logout' %}">
+                        <svg style="width: 16px; height: 16px; margin-right: 8px; display: inline-block;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                            <polyline points="16,17 21,12 16,7"></polyline>
+                            <line x1="21" y1="12" x2="9" y2="12"></line>
+                        </svg>
+                        Cerrar Sesión
+                    </a>
+                </div>
+            </div>
+        </nav>
+    <!-- Fondo con capa oscura -->
+    <div class="background-overlay"></div>
+
+    <!-- Sección de Mesas -->
+    <div class="mesas-section">
+        <h2>Mesas</h2>
+        <div class="mesas-grid">
+            {% for mesa in mesas %}
+                <div class="mesa" data-mesa-id="{{ mesa.id }}" data-numero-mesa="{{ mesa.numero }}">
+                    <i class="fas fa-chair"></i>
+                    <h3>Mesa {{ mesa.numero }}</h3>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Sección de Pedidos -->
+    <div class="pedido-section" id="pedido-section">
+        <h3>Pedido de la Mesa <span id="mesa-seleccionada"></span></h3>
+        <table>
+            <thead>
+                <tr>
+                    <th >Producto</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="pedido-body">
+                <!-- Aquí se agregan filas de productos dinámicamente -->
+            </tbody>
+        </table>
+        <div class="pedido">
+            <button id="agregar-producto-btn" data-url="{% url 'cervezas' %}">Agregar Producto</button>
+
+            <p>Total del Pedido: $<span id="total-pedido">0.00</span></p>
+            <p>Cantidad total: <span id="cantidad-total-pedido">0</span></p>
+
+            <select class="medio-pago">
+                <option value="efectivo">Efectivo</option>
+                <option value="tarjeta">Tarjeta</option>
+                <option value="transferencia">Transferencia</option>
+            </select>
+
+            <button class="finalizar-pedido-btn">Finalizar Pedido</button>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Restaurante Nombre. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        let dropdownOpen = false;
+
+        function toggleDropdown() {
+            const dropdown = document.getElementById("profileDropdown");
+            const profileBtn = document.getElementById("profileBtn");
+            const overlay = document.getElementById("dropdownOverlay");
+            
+            if (dropdownOpen) {
+                closeDropdown();
+            } else {
+                openDropdown();
+            }
+        }
+
+        function openDropdown() {
+            const dropdown = document.getElementById("profileDropdown");
+            const profileBtn = document.getElementById("profileBtn");
+            const overlay = document.getElementById("dropdownOverlay");
+            
+            dropdown.classList.add("show");
+            profileBtn.classList.add("active");
+            overlay.classList.add("show");
+            dropdownOpen = true;
+        }
+
+        function closeDropdown() {
+            const dropdown = document.getElementById("profileDropdown");
+            const profileBtn = document.getElementById("profileBtn");
+            const overlay = document.getElementById("dropdownOverlay");
+            
+            dropdown.classList.remove("show");
+            profileBtn.classList.remove("active");
+            overlay.classList.remove("show");
+            dropdownOpen = false;
+        }
+
+        function verPerfil() {
+            // Por ahora solo mostramos un alert, puedes cambiar esto después
+            alert('Función Ver Perfil - Aquí puedes agregar la lógica para mostrar el perfil');
+            closeDropdown();
+            
+            // Opciones para implementar después:
+            // 1. Redirigir a una página de perfil: window.location.href = "/perfil/";
+            // 2. Mostrar un modal con información del usuario
+            // 3. Redirigir a una URL específica que tengas configurada
+        }
+
+        // Cerrar dropdown con tecla Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && dropdownOpen) {
+                closeDropdown();
+            }
+        });
+
+        // Prevenir que el dropdown se cierre al hacer clic dentro de él
+        document.getElementById("profileDropdown").addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+    </script>   
+    
+
+    <script src="{% static 'js/mesas.js' %}"></script>
+    <script src="{% static 'js/mesero_principal.js' %}"></script> 
+</body>
+
+
+</html>

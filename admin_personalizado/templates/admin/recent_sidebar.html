@@ -1,0 +1,33 @@
+{% comment %} recent_sidebar.html {% endcomment %}
+
+{% load log i18n %}
+{% get_admin_log 15 as admin_log for_user user %}
+<div class="recent-actions-container">
+    <h2>{% translate 'Actividad Reciente' %}</h2>
+    <div class="recent-actions-scroll">
+        {% if not admin_log %}
+            <p>{% translate 'No hay actividad reciente' %}</p>
+        {% else %}
+            <ul class="recent-actions-list">
+                {% for entry in admin_log %}
+                <li class="action-item {% if entry.is_addition %}add{% elif entry.is_change %}change{% elif entry.is_deletion %}delete{% endif %}">
+                    <div class="action-header">
+                        <span class="action-type">{{ entry.get_action_flag_display }}</span>
+                        <span class="action-time">{{ entry.action_time|timesince }} {% translate 'atrás' %}</span>
+                    </div>
+                    <div class="action-content">
+                        {% if entry.content_type %}
+                            <span class="model-name">{{ entry.content_type.name|capfirst }}</span>
+                        {% endif %}
+                        {% if entry.is_deletion or not entry.get_admin_url %}
+                            <span class="object-name">{{ entry.object_repr|truncatechars:30 }}</span>
+                        {% else %}
+                            <a href="{{ entry.get_admin_url }}" class="object-name">{{ entry.object_repr|truncatechars:30 }}</a>
+                        {% endif %}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</div>

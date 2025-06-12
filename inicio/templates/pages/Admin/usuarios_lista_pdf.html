@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <style>
+        /* Estilos generales de la tabla y celdas */
+        table {
+            width: 100%; /* La tabla ocupa todo el ancho disponible */
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 6px; /* Ajusta este valor si necesitas más o menos espacio */
+            text-align: left;
+            vertical-align: top; /* Importante para los emails con salto de línea */
+            font-size: 9pt; /* Considera reducir el tamaño de la fuente si el contenido es muy largo */
+        }
+        th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        /* Definición de anchos para cada columna */
+        .username-column { width: 15%; }
+        .nombre-column { width: 15%; }
+        .apellido-column { width: 15%; }
+        .email-column {
+            width: 20%; /* Ajusta este ancho. Es crucial que el email quepa. */
+            word-wrap: break-word; /* Permite que palabras largas se rompan */
+            white-space: normal; /* Asegura que el texto fluya normalmente */
+        }
+        .rol-column {
+            width: 12%; /* **AUMENTA ESTE ANCHO PARA EL ROL** */
+        }
+        .activo-column { width: 8%; } /* Puede ser más pequeño ya que es 'Sí' o 'No' */
+        .fecha-registro-column {
+            width: 15%; /* Ajusta este ancho según el formato de tu fecha/hora */
+        }
+
+        /* Suma de porcentajes: 15+15+15+20+12+8+15 = 100% */
+    </style>
+</head>
+<body>
+    <h1>{{ title }}</h1>
+    <table>
+        <thead>
+            <tr>
+                <th class="username-column">Usuario</th>
+                <th class="nombre-column">Nombre</th>
+                <th class="apellido-column">Apellido</th>
+                <th class="email-column">Email</th>
+                <th class="rol-column">Rol</th>
+                <th class="activo-column">Activo</th>
+                <th class="fecha-registro-column">Fecha Registro</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <td class="username-column">{{ user.username }}</td>
+                <td class="nombre-column">{{ user.first_name }}</td>
+                <td class="apellido-column">{{ user.last_name }}</td>
+                <td class="email-column">{{ user.email|safe }}</td> {# <-- CONFIRMA QUE TIENE |safe #}
+                <td class="rol-column">{{ user.rol }}</td>
+                <td class="activo-column">{% if user.is_active %}Sí{% else %}No{% endif %}</td>
+                <td class="fecha-registro-column">{{ user.date_joined|date:"d M Y H:i" }}</td> {# Puedes ajustar el formato de fecha #}
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7">No hay usuarios para mostrar.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

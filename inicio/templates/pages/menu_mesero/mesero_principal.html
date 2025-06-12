@@ -1,0 +1,116 @@
+{% load static %}
+{% load custom_tags %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesero - Gastro Bar</title>
+    <link rel="stylesheet" href="{% static 'css/mesas_principal.css' %}" type="text/css" />
+    {% block extrastyle %}{% endblock %} {# ¡FALTABA ESTE BLOQUE AQUÍ! #}
+</head>
+<body {% block body_class %}{% endblock %}> {# ¡FALTABA ESTE BLOQUE AQUÍ! #}
+    <div id="dropdownOverlay" class="dropdown-overlay" onclick="closeDropdown()"></div>
+
+    <nav class="main-menu">
+        <div class="menu-left">
+            <a href="{% url 'mesero_principal' %}">OMBÚ CAFÉ</a>
+        </div>
+        
+        {% if user.is_authenticated %}
+        <ul class="menu-center">
+            <li class="admin-item"><a href="{% url 'mesero_principal' %}">Inicio</a></li>
+            <li class="admin-item"><a href="{% url 'bebidas_calientes' %}">Productos</a></li>
+            <li class="admin-item"><a href="{% url 'mesas' %}">Mesas</a></li>
+        </ul>
+        {% endif %}
+    
+        <div class="profile-container">
+            <button class="profile-btn" id="profileBtn" onclick="toggleDropdown()">
+                Perfil
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="6,9 12,15 18,9"></polyline>
+                </svg>
+            </button>
+            <div id="profileDropdown" class="dropdown">
+                <a href="{% url 'perfil_mesero' %}"> 
+                    <svg style="width: 16px; height: 16px; margin-right: 8px; display: inline-block;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="6" r="4"></circle>
+                        <path d="M12 14c-3.3 0-6 2.7-6 6h12c0-3.3-2.7-6-6-6z"></path>
+                    </svg>
+                    Ver Perfil
+                </a>
+                <div class="dropdown-separator"></div>
+                <a href="{% url 'logout' %}">
+                    <svg style="width: 16px; height: 16px; margin-right: 8px; display: inline-block;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16,17 21,12 16,7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    Cerrar Sesión
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        {% block content %}
+        <h1>Bienvenido, {{ user.first_name }}</h1>
+        <p>Aquí puedes gestionar productos y mesas.</p>
+        {% endblock content %}
+    </div>
+
+    <script>
+        let dropdownOpen = false;
+
+        function toggleDropdown() {
+            const dropdown = document.getElementById("profileDropdown");
+            const profileBtn = document.getElementById("profileBtn");
+            const overlay = document.getElementById("dropdownOverlay");
+            
+            if (dropdownOpen) {
+                closeDropdown();
+            } else {
+                openDropdown();
+            }
+        }
+
+        function openDropdown() {
+            const dropdown = document.getElementById("profileDropdown");
+            const profileBtn = document.getElementById("profileBtn");
+            const overlay = document.getElementById("dropdownOverlay");
+            
+            dropdown.classList.add("show");
+            profileBtn.classList.add("active");
+            overlay.classList.add("show");
+            dropdownOpen = true;
+        }
+
+        function closeDropdown() {
+            const dropdown = document.getElementById("profileDropdown");
+            const profileBtn = document.getElementById("profileBtn");
+            const overlay = document.getElementById("dropdownOverlay");
+            
+            dropdown.classList.remove("show");
+            profileBtn.classList.remove("active");
+            overlay.classList.remove("show");
+            dropdownOpen = false;
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && dropdownOpen) {
+                closeDropdown();
+            }
+        });
+
+        document.addEventListener('click', function(event) {
+            const profileContainer = document.querySelector('.profile-container');
+            if (dropdownOpen && !profileContainer.contains(event.target)) {
+                closeDropdown();
+            }
+        });
+
+    </script>
+    <script src="{% static 'js/mesero_principal.js' %}"></script>
+</body>
+</html>

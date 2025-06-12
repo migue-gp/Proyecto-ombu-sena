@@ -1,0 +1,155 @@
+{% extends 'pages/menu_mesero/mesero_principal.html' %} 
+{% load static %}
+
+{% block body_class %}profile-page-mesero{% endblock %} {# ASIGNA UNA CLASE ESPECÍFICA AL BODY #}
+
+{% block extrastyle %}
+    {{ block.super }} 
+    <style>
+        /* ESTILOS ESPECÍFICOS PARA LA PÁGINA DE PERFIL DEL MESERO */
+        /* Usamos la clase 'profile-page-mesero' en el body para mayor especificidad */
+
+        body.profile-page-mesero {
+            background-image: none !important; /* Elimina la imagen de fondo */
+            background-color: #f0f2f5 !important; /* Fondo gris claro */
+            color: #333 !important; /* Texto del cuerpo en oscuro por defecto */
+            overflow-y: auto !important; /* Asegura el scroll si es necesario */
+            height: auto !important; /* Evita altura fija */
+        }
+
+        /* Eliminar el overlay oscuro del main-content solo para esta página */
+        body.profile-page-mesero .main-content::before {
+            background-color: transparent !important; /* Elimina la capa oscura */
+            display: none !important; /* Asegúrate de que no se renderice en absoluto */
+        }
+
+        body.profile-page-mesero .main-content {
+            background-color: transparent !important; /* Asegura que no tenga un fondo oscuro */
+            min-height: calc(100vh - 90px) !important; /* Ajusta la altura mínima para ocupar el resto de la ventana */
+            padding-top: 90px !important; /* Asegura espacio debajo de la barra de navegación */
+            padding-bottom: 50px !important; /* Añade un poco de espacio en la parte inferior */
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start; /* Alinea contenido al inicio */
+            align-items: center; /* Centra la tarjeta horizontalmente */
+            text-align: center;
+        }
+        
+        /* Estilos para la tarjeta de perfil */
+        .profile-card {
+            background-color: #ffffff; /* Fondo blanco para la tarjeta */
+            border: 1px solid #c0c0c0; /* Borde gris claro */
+            border-radius: 10px; /* Bordes más suaves */
+            padding: 30px;
+            margin: 40px auto; /* Centra y da más margen */
+            max-width: 650px; /* Un poco más de ancho */
+            box-shadow: 0 6px 18px rgba(0,0,0,0.2); /* Sombra más definida */
+            text-align: center;
+            color: #333; /* Color de texto general para la tarjeta */
+            position: relative; 
+            z-index: 20; /* Z-index alto para asegurar visibilidad */
+            width: 90%; /* Ancho responsivo */
+            box-sizing: border-box; /* Incluye padding y border en el ancho */
+        }
+        @media (max-width: 768px) {
+            .profile-card {
+                margin: 20px auto;
+                padding: 20px;
+                width: 95%;
+            }
+        }
+
+        .profile-card h2 {
+            color: #2c3e50; /* Azul/gris oscuro para el título */
+            margin-bottom: 25px;
+            font-size: 2.2em; /* Título un poco más grande */
+            border-bottom: 2px solid #e0e0e0; /* Línea separadora */
+            padding-bottom: 15px;
+        }
+        .profile-info {
+            display: grid;
+            grid-template-columns: 1fr 2.5fr; /* Más espacio para los valores */
+            gap: 20px; /* Mayor espacio entre filas/columnas */
+            text-align: left;
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #fefefe; /* Fondo blanco casi puro para los datos */
+            border-radius: 8px;
+            border: 1px solid #e5e5e5; /* Borde sutil para la sección de información */
+        }
+        .profile-info label {
+            font-weight: 600; /* Un poco más de peso */
+            color: #4a4a4a; /* Etiquetas en gris oscuro */
+            padding-right: 15px; /* Más espacio entre etiqueta y valor */
+            font-size: 1.05em; /* Un poco más grande */
+        }
+        .profile-info p {
+            margin: 0;
+            color: #222; /* Valores en gris muy oscuro para máximo contraste */
+            word-wrap: break-word; 
+            font-size: 1.05em; /* Un poco más grande */
+        }
+        .profile-avatar {
+            width: 140px; /* Avatar un poco más grande */
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 20px;
+            border: 5px solid #4CAF50; /* Verde más vibrante para el borde */
+            box-shadow: 0 0 15px rgba(76, 175, 80, 0.4); /* Sombra sutil para el avatar */
+            background-color: #fff;
+        }
+        .profile-card .status-active {
+            color: #28a745; /* Verde estándar para activo */
+            font-weight: bold;
+        }
+        .profile-card .status-inactive {
+            color: #dc3545; /* Rojo estándar para inactivo */
+            font-weight: bold;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+    <div class="profile-card">
+        <h2>Mi Perfil</h2>
+        {% comment %} {% if usuario.avatar %}
+            <img src="{{ usuario.avatar.url }}" alt="Avatar de {{ usuario.username }}" class="profile-avatar">
+        {% else %}
+            <img src="{% static 'img/default_avatar.png' %}" alt="Avatar por defecto" class="profile-avatar">
+        {% endif %} {% endcomment %}
+        
+        <div class="profile-info">
+            <label>Usuario:</label>
+            <p>{{ usuario.username }}</p>
+
+            <label>Nombre:</label>
+            <p>{{ usuario.first_name }}</p>
+
+            <label>Apellido:</label>
+            <p>{{ usuario.last_name }}</p>
+
+            <label>Email:</label>
+            <p>{{ usuario.email }}</p>
+
+            <label>Teléfono:</label>
+            <p>{% if usuario.telefono %}{{ usuario.telefono }}{% else %}No especificado{% endif %}</p>
+
+            <label>Rol:</label>
+            <p>{{ usuario.get_rol_display }}</p>
+
+            <label>Estado Activo:</label>
+            <p class="{% if usuario.is_active %}status-active{% else %}status-inactive{% endif %}">
+                {% if usuario.is_active %}Sí{% else %}No{% endif %}
+            </p>
+
+            <label>Último Acceso:</label>
+            <p>{{ usuario.last_login|date:"d M Y H:i" }}</p>
+
+            <label>Fecha de Registro:</label>
+            <p>{{ usuario.date_joined|date:"d M Y H:i" }}</p>
+        </div>
+    </div>
+</div>
+{% endblock content %}

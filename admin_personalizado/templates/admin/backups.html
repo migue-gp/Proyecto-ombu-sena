@@ -1,0 +1,241 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'admin_personalizado/css_panel/backups.css' %}">
+  <style>
+    /* Estilos personalizados para títulos */
+    .page-container-perfil h4 {
+        color: #2c3e50;
+        font-size: 2.2rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 2rem;
+        position: relative;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .page-container-perfil h4::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 4px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 2px;
+    }
+
+    .container-perfil h5 {
+        color: #34495e;
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin: 2rem 0 1rem 0;
+        padding-left: 15px;
+        border-left: 4px solid #3498db;
+        background: linear-gradient(90deg, rgba(52,152,219,0.1) 0%, transparent 100%);
+        padding: 10px 15px;
+        border-radius: 0 8px 8px 0;
+    }
+
+    /* Botón principal mejorado */
+    .btn-crear-backup {
+        background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+        border: none;
+        color: white;
+        font-size: 1.1rem;
+        font-weight: 600;
+        padding: 15px 30px;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 2rem;
+    }
+
+    .btn-crear-backup:hover {
+        background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+    }
+
+    /* Lista de backups mejorada */
+    .lista-backups {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .lista-backups li {
+        background: white;
+        border: 1px solid #e1e8ed;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        transition: all 0.3s ease;
+        animation: fadeInUp 0.5s ease forwards;
+    }
+
+    .lista-backups li:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        border-color: #3498db;
+    }
+
+    .archivo-nombre {
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 1rem;
+        flex-grow: 1;
+    }
+
+    .acciones-backup {
+        display: flex;
+        gap: 10px;
+    }
+
+    /* Botones de acción mejorados */
+    .btn-restaurar {
+        background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        color: white;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+    }
+
+    .btn-restaurar:hover {
+        background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3);
+        text-decoration: none;
+        color: white;
+    }
+
+    .btn-eliminar {
+        background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: white;
+        text-decoration: none;
+        padding: 8px 16px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 2px 8px rgba(231, 76, 60, 0.2);
+    }
+
+    .btn-eliminar:hover {
+        background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        text-decoration: none;
+        color: white;
+    }
+
+    /* Estado vacío */
+    .estado-vacio {
+        text-align: center;
+        padding: 40px 20px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 12px;
+        color: #6c757d;
+        font-style: italic;
+        border: 2px dashed #dee2e6;
+    }
+
+    .estado-vacio::before {
+        content: '📁';
+        display: block;
+        font-size: 3rem;
+        margin-bottom: 10px;
+    }
+
+    /* Animaciones */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .lista-backups li {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .acciones-backup {
+            width: 100%;
+            justify-content: flex-end;
+        }
+
+        .btn-crear-backup {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+<div class="page-container-perfil">
+    <h4>🛡️ Gestión de Copias de Seguridad</h4>
+    <div class="container-perfil">
+        <form method="post" action="{% url 'admin_panel:crear_backup' %}">
+            {% csrf_token %}
+            <button class="btn-crear-backup" type="submit">
+                📦 Crear Nueva Copia
+            </button>
+        </form>
+
+        <h5>📋 Copias Disponibles</h5>
+        {% if archivos %}
+            <ul class="lista-backups">
+            {% for archivo in archivos %}
+                <li>
+                    <span class="archivo-nombre">{{ archivo }}</span>
+                    <div class="acciones-backup">
+                        <a href="{% url 'admin_panel:restaurar_backup' archivo %}" class="btn-restaurar">
+                            🔄 Restaurar
+                        </a>
+                        <a href="{% url 'admin_panel:eliminar_backup' archivo %}" class="btn-eliminar">
+                            🗑️ Eliminar
+                        </a>
+                    </div>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <div class="estado-vacio">
+                No hay copias de seguridad disponibles aún.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

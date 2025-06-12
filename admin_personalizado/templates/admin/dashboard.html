@@ -1,0 +1,78 @@
+{% extends 'admin/base_site.html' %}
+{% load static i18n %}
+
+
+
+{% block title %}Dashboard Administrativo{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin_personalizado/css_panel/dashboard.css' %}">
+{% endblock %}
+
+{% block branding%}
+{{ block.super}}
+{% endblock %}
+
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'admin:index' %}">{% translate 'Home' %}</a>
+&rsaquo; {{ title }}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-page-container">
+    {% block messages %}
+    {% if messages %}
+        <ul class="messagelist">{% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+        {% endfor %}</ul>
+    {% endif %}
+    {% endblock %}
+    <div class="row">
+        <!-- Área principal -->
+        <div class="col-lg-9 col-md-8 dashboard-main-area">
+            <h1 class="dashboard-title">Bienvenido al Dashboard</h1>
+            <p class="dashboard-intro-text">Aquí puedes ver un resumen de las operaciones administrativas recientes.</p>
+
+            {% comment %} <!-- Tarjeta de información -->
+            <div class="dashboard-info-card">
+                <div class="dashboard-card-header">
+                    <h6>Información General</h6>
+                </div>
+                <div class="dashboard-card-body">
+                    <p>Utiliza la barra de navegación superior para gestionar Usuarios, Productos, Inventario, Mesas y Reservas.</p>
+                    <p>Las actividades que realices como administrador se mostrarán en la barra lateral "Actividad Reciente".</p>
+                </div>
+            </div> {% endcomment %}
+        </div> 
+
+        <!-- Barra lateral -->
+        <div class="col-lg-3 col-md-4 dashboard-sidebar">
+            <div class="dashboard-recent-actions">
+                <h2 class="dashboard-sidebar-title">Actividad Reciente</h2>
+                <ul class="dashboard-actions-list">
+                    {% for actividad in actividades_recientes %}
+                    <li class="dashboard-action-item">
+                        <div class="dashboard-action-content">
+                            {{ actividad.accion }}
+                            <span class="dashboard-action-timestamp">{{ actividad.fecha_hora|date:"d M H:i" }}</span>
+                        </div>
+                    </li>
+                    {% empty %}
+                    <li class="dashboard-action-item no-activities">
+                        <div class="dashboard-action-content">No hay actividades recientes.</div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block sidebar %}
+{{ block.super }}
+{% endblock %} 

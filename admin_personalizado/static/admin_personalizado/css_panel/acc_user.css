@@ -1,0 +1,322 @@
+/* ombu-django/proyecto_ombu/admin_personalizado/static/admin_personalizado/css_panel/acc_user.css */
+
+/* Estilos para los botones de acción dentro de la tabla de resultados de usuario */
+#result_list td.field-acciones .button {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    margin-right: 8px; /* Espacio entre botones */
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    white-space: nowrap; /* Evita que el texto del botón se rompa */
+    background-color: red;
+    color: white;
+}
+
+#result_list td.field-acciones .button.action-download-pdf {
+    background:linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%);
+    color: white;
+}
+
+#result_list td.field-acciones .button:last-child {
+    margin-right: 0; /* Eliminar margen derecho del último botón en la fila */
+}
+
+/* Estilos para el botón de Editar */
+#result_list td.field-acciones .button.action-edit {
+    background-color: #28a745; /* Verde */
+    color: white;
+}
+
+#result_list td.field-acciones .button.action-edit:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+/* Estilos para el botón de Eliminar */
+#result_list td.field-acciones .button.action-delete {
+    background-color: #ee1228; /* Rojo */
+    color: white;
+}
+
+#result_list td.field-acciones .button.action-delete:hover {
+    background-color: #ee1228;
+    transform: translateY(-1px);
+}
+
+/* Estilos para los iconos dentro de los botones */
+#result_list td.field-acciones .button i {
+    margin-right: 6px; /* Espacio entre el icono y el texto */
+    font-size: 16px; /* Ajusta el tamaño del icono */
+}
+
+/* Ajustes para la columna de acciones en la tabla de listado */
+#result_list th.column-acciones,
+#result_list td.field-acciones {
+    text-align: center; /* Centra los botones en la columna */
+    vertical-align: middle;
+    width: 1%; /* Intenta darle un ancho mínimo para que no ocupe demasiado espacio */
+    white-space: nowrap; /* Evita que los botones se envuelvan */
+}
+
+/* Estilos específicos para la columna acciones_mesa */
+#result_list th.column-acciones_mesa,
+#result_list td.field-acciones_mesa {
+    text-align: center;
+    vertical-align: middle;
+    width: 1%;
+    white-space: nowrap;
+}
+
+
+/* estilos para botones en mesas --------------------------*/
+#result_list td.field-acciones_mesa .button {
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px 10px 10px;
+    margin-right: 8px;
+    border: none;
+    border-radius: 4px;
+    font-size: 14px;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    white-space: nowrap;
+    background-color: rgb(34, 76, 107);
+    color: white;
+}
+
+#result_list td.field-acciones_mesa .button.action-edit {
+    background-color: #28a745;
+    color: white;
+}
+
+#result_list td.field-acciones_mesa .button.action-edit:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+}
+
+
+/* estilos para botones en pedido -------------------------------------------*/
+/* Estilos específicos para la columna acciones_pedido */
+#result_list th.column-acciones_pedido,
+#result_list td.field-acciones_pedido {
+    text-align: center;
+    vertical-align: middle;
+    width: auto; /* Cambié de 1% a auto para mejor distribución */
+    white-space: nowrap;
+    padding: 8px 4px; /* Añadí padding para mejor espaciado */
+}
+
+/* Estilos base para todos los botones en la columna de acciones de pedido */
+#result_list td.field-acciones_pedido .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px; /* Aumenté el padding para mejor apariencia */
+    margin-right: 6px; /* Reducí el margen para mejor espaciado */
+    border: none;
+    border-radius: 6px; /* Bordes más redondeados */
+    font-size: 13px; /* Tamaño de fuente más pequeño */
+    font-weight: 500; /* Peso de fuente medio */
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease; /* Transición más suave */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15); /* Sombra más pronunciada */
+    white-space: nowrap;
+    color: white;
+    min-width: 120px; /* Ancho mínimo para consistencia */
+    line-height: 1.2; /* Mejor altura de línea */
+}
+
+#result_list td.field-acciones_pedido .button:last-child {
+    margin-right: 0;
+}
+
+#result_list td.field-acciones_pedido .button:hover {
+    transform: translateY(-2px); /* Efecto hover más pronunciado */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+}
+
+#result_list td.field-acciones_pedido .button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+
+/* Estilos específicos para el botón de Ver Contenido */
+#result_list td.field-acciones_pedido .button.action-view {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%); /* Gradiente azul */
+    border: 1px solid #0056b3;
+}
+
+#result_list td.field-acciones_pedido .button.action-view:hover {
+    background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+    border-color: #004085;
+}
+
+/* Estilos específicos para el botón de Descargar PDF */
+#result_list td.field-acciones_pedido .button.action-download {
+    background: linear-gradient(135deg, #6f42c1 0%, #5a32a3 100%); /* Gradiente púrpura */
+    border: 1px solid #5a32a3;
+}
+
+#result_list td.field-acciones_pedido .button.action-download:hover {
+    background: linear-gradient(135deg, #5a32a3 0%, #4c2a85 100%);
+    border-color: #4c2a85;
+}
+
+/* Estilos para los iconos dentro de los botones */
+#result_list td.field-acciones_pedido .button i {
+    margin-right: 6px;
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+/* Efecto de focus para accesibilidad */
+#result_list td.field-acciones_pedido .button:focus {
+    outline: 2px solid #fff;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.25);
+}
+
+/* Media queries para responsividad específica de pedidos */
+/* Tablets y pantallas medianas */
+@media screen and (max-width: 768px) {
+    #result_list td.field-acciones_pedido .button {
+        padding: 6px 10px;
+        font-size: 12px;
+        margin-right: 4px;
+        min-width: 100px;
+    }
+
+    #result_list td.field-acciones_pedido .button i {
+        margin-right: 4px;
+        font-size: 13px;
+    }
+
+    #result_list th.column-acciones_pedido,
+    #result_list td.field-acciones_pedido {
+        padding: 6px 2px;
+    }
+}
+
+/* Móviles y pantallas pequeñas */
+@media screen and (max-width: 480px) {
+    #result_list td.field-acciones_pedido {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 6px; /* Espacio entre botones apilados */
+        padding: 8px 4px;
+    }
+
+    #result_list td.field-acciones_pedido .button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        max-width: 140px;
+        margin-right: 0;
+        margin-bottom: 0; /* Removido ya que usamos gap */
+        padding: 10px 8px;
+        font-size: 13px;
+        min-width: unset;
+    }
+
+    #result_list td.field-acciones_pedido .button i {
+        margin-right: 6px;
+        font-size: 14px;
+    }
+}
+
+/* Para pantallas muy pequeñas */
+@media screen and (max-width: 360px) {
+    #result_list td.field-acciones_pedido .button {
+        padding: 8px 6px;
+        font-size: 12px;
+        max-width: 120px;
+    }
+
+    #result_list td.field-acciones_pedido .button i {
+        margin-right: 4px;
+        font-size: 12px;
+    }
+}
+
+/* Mejoras adicionales para la tabla completa en móviles */
+@media screen and (max-width: 768px) {
+    #result_list {
+        font-size: 13px;
+    }
+    
+    #result_list th,
+    #result_list td {
+        padding: 6px 4px;
+    }
+}
+
+/* Estilos adicionales para mejorar la apariencia general */
+#result_list tr {
+    background-color: #f8f9fa; /* Fondo uniforme para toda la fila */
+}
+
+#result_list tr:hover {
+    background-color: #d4edda !important; /* Verde claro tipo Bootstrap */
+}
+
+/* Animación sutil al cargar */
+#result_list td.field-acciones_pedido .button {
+    animation: fadeInScale 0.3s ease-out;
+}
+
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* --- Media Queries para responsividad en acc_user.css --- */
+
+/* En pantallas más pequeñas (móviles y tablets), los botones pueden volverse más compactos */
+@media screen and (max-width: 768px) {
+    #result_list td.field-acciones .button {
+        padding: 5px 10px; /* Reducir padding */
+        font-size: 13px;   /* Reducir tamaño de fuente */
+        margin-right: 6px; /* Reducir margen entre botones */
+    }
+
+    #result_list td.field-acciones .button i {
+        margin-right: 4px; /* Reducir espacio del icono */
+    }
+}
+
+/* En pantallas muy pequeñas, los botones pueden apilarse o reducirse aún más */
+@media screen and (max-width: 480px) {
+    #result_list td.field-acciones .button {
+        display: flex; /* Cambiar a flex para apilar si el contenedor lo permite */
+        flex-basis: 100%; /* Ocupar todo el ancho disponible si se apilan */
+        margin-right: 0; /* Eliminar margen horizontal si se apilan verticalmente */
+        margin-bottom: 5px; /* Añadir margen vertical */
+        justify-content: center; /* Centrar el contenido del botón */
+        padding: 8px; /* Un poco más de padding cuando se apilan */
+        font-size: 14px; /* Restaurar un poco el tamaño de fuente si se apilan */
+    }
+
+    /* Ajustar el contenedor de los botones para que se apilen */
+    #result_list td.field-acciones {
+        display: flex;
+        flex-direction: column; /* Apilar los botones verticalmente */
+        align-items: center; /* Centrar los botones apilados */
+    }
+}

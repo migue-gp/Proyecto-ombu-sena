@@ -1,0 +1,97 @@
+/* Estilo general de la barra lateral */
+.custom-sidebar {
+    background-color: #060606;
+    padding: 10px;
+    height: 100vh; /* Asegura que la barra lateral ocupe toda la altura */
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+/* Contenedor de Actividad Reciente */
+.recent-actions-container {
+    height: 50vh; /* Ocupa la mitad de la altura */
+    overflow-y: auto; /* Scroll si el contenido excede */
+    margin-bottom: 20px;
+    background-color: #121212;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+/* Título de la sección */
+.recent-actions-container h2 {
+    color: white;
+    margin-top: 0;
+}
+
+/* Lista de acciones recientes */
+.recent-actions-list {
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+
+/* Estilo de cada ítem de acción */
+.recent-actions-list li {
+    list-style-type: none;
+    margin-right: 10px; /* Mantiene el espaciado a la derecha de cada item */
+    width: 100%; /* Asegura que los items ocupen todo el ancho para que align-items funcione */
+    text-align: center; /* Centrar el texto dentro de cada item li */
+}
+
+
+
+.recent-actions-scroll{
+    max-height: 600px; /* Altura máxima antes de que aparezca el scroll */
+    overflow-y: auto;
+    scrollbar-width: thin; 
+    scrollbar-color: #888 #f1f1f1;
+}
+
+/* .action-header {
+    color: white;
+} */
+
+.action-content a {
+    color: white;
+    text-decoration: none;
+    display: block;
+
+}
+
+/* --- Media Queries para responsividad en barraside.css --- */
+
+@media screen and (max-width: 992px) {
+    /* Ajustes cuando el sidebar es más estrecho (en tablets) */
+    .action-item {
+        padding: 8px; /* Reducir padding */
+        font-size: 0.9em; /* Reducir tamaño de fuente */
+        margin-right: 5px; /* Reducir margen */
+    }
+
+    .recent-actions-container h2 {
+        font-size: 1em; /* Reducir tamaño del título */
+    }
+}
+
+@media screen and (max-width: 768px) {
+    /* Ajustes cuando el sidebar está oculto o en formato móvil */
+    /* Si el sidebar se muestra como un overlay de ancho completo, estos estilos pueden ser relevantes */
+    .action-item {
+        margin-right: 0; /* Eliminar margen derecho si no hay otros elementos al lado */
+        width: 90%; /* Asegurar que ocupe un buen ancho si se muestra */
+        padding: 10px 15px; /* Restaurar padding para mejor clicabilidad */
+        font-size: 1em; /* Restaurar tamaño de fuente */
+    }
+
+    .recent-actions-list {
+        padding: 0; /* Asegurar que no haya padding que lo desplace */
+    }
+
+    .recent-actions-list li {
+        margin-right: 0; /* Asegurar que no haya margen extra */
+    }
+}

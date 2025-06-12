@@ -1,0 +1,86 @@
+/* estilos.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-image: url('/static/img/logos_o_otros/ombu_fondo.jpg') !important;
+  background-size: cover;
+  background-position: center;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  max-width: 400px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 30px 40px;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+}
+
+h2 {
+  margin-top: 0;
+  color: #183D3D;
+  font-weight: 600;
+  text-align: center;
+}
+
+p {
+  color: #2e2e2e;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input[type="email"],
+input[type="password"] {
+  padding: 12px;
+  margin-top: 12px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  outline: none;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #145C5C;
+}
+
+button {
+  margin-top: 20px;
+  padding: 12px;
+  font-size: 16px;
+  background-color: #183D3D;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #145C5C;
+}
+
+a {
+  color: #183D3D;
+  text-decoration: none;
+  text-align: center;
+  margin-top: 15px;
+  display: block;
+  font-weight: 500;
+}
+
+a:hover {
+  text-decoration: underline;
+}

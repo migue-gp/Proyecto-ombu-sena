@@ -1,0 +1,33 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'admin_personalizado/css_panel/perfil.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-container-perfil">
+    <h4>Mi perfil</h4>
+    <div class="container-perfil">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <fieldset>
+                <legend>Información del usuario</legend>
+                {{ user_form.as_p }}
+            </fieldset>
+
+            <fieldset>
+                <legend>Perfil</legend>
+                {% if perfil_form.instance.avatar %}
+                    <img src="{{ perfil_form.instance.avatar.url }}" width="150" height="150"><br>
+                {% endif %}
+                {{ perfil_form.as_p }}
+            </fieldset>
+
+            <button type="submit" class="default">Guardar cambios</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

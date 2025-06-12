@@ -1,0 +1,154 @@
+
+.user-menu-container {
+    position: relative;
+}
+
+.user-menu-container ul li {
+    color: black;
+    list-style: none;
+}
+
+.user-menu-container ul li #ch{
+    color: black;
+    
+}
+
+
+.user-menu-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding: 5px 10px;
+    color: #fff; 
+}
+
+.user-menu-toggle img {
+    width: 30px; 
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 8px;
+}
+
+.user-menu {
+    position: absolute;
+    top: 100%; 
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: none; 
+    z-index: 1000; 
+
+
+
+}
+
+.user-menu li {
+    padding: 10px 15px;
+    width: auto;
+}
+
+.user-menu li a{
+    padding: 10px;
+}
+
+:root {
+    --menu-text-color: black; /* Define la variable */
+}
+
+.user-menu li a {
+    color: var(--menu-text-color); /* Usa la variable */
+    text-decoration: none;
+    display: block;
+}
+
+.user-menu li a:hover {
+    background-color: #030303;
+}
+
+.user-menu li form {
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+.user-menu li button {
+    background: none;
+    border: none;
+    color: #333;
+    cursor: pointer;
+    padding: 0;
+}
+
+.user-menu li button:hover {
+    background-color: #f0f0f0;
+}
+
+/* Estilos para mostrar el menú */
+.user-menu.show {
+    display: block;
+    padding: 15px;
+    background-color: rgb(40, 38, 38);
+    text-align: center;
+}
+
+.user-menu.show li a{
+    width: auto;
+    padding: 5px 50px 5px 50px;
+}
+
+
+.user-menu-container  a{
+    color: black;
+
+
+}
+
+:root {
+    --menu-text-color: black; /* Define la variable */
+}
+
+/* --- Media Queries para responsividad en menu_despleg.css --- */
+
+@media screen and (max-width: 768px) {
+    .user-menu-toggle {
+        padding: 5px; /* Reducir padding del toggle */
+        font-size: 14px; /* Ocultar el texto del nombre de usuario si es muy largo */
+    }
+
+    .user-menu-toggle span {
+        display: none; /* Ocultar el nombre de usuario en móviles */
+    }
+
+    .user-menu-toggle img {
+        width: 28px; /* Reducir tamaño de la imagen */
+        height: 28px;
+        margin-right: 0; /* Eliminar margen si no hay texto */
+    }
+
+    .user-menu {
+        right: 5px; /* Ajustar posición en pantallas pequeñas */
+        min-width: 120px; /* Reducir ancho mínimo */
+    }
+
+    .user-menu li {
+        padding: 8px 12px; /* Reducir padding de los items */
+        font-size: 0.9em; /* Reducir tamaño de fuente */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .user-menu {
+        min-width: 100px;
+        right: 2px;
+    }
+
+    .user-menu li {
+        padding: 6px 10px;
+        font-size: 0.85em;
+    }
+}

@@ -1,0 +1,63 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ombu - Login</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="form-box login" id="loginFormContainer">
+            <form method="POST" id="loginForm">
+                {% csrf_token %}
+                <h1>Iniciar Sesión</h1>
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <p style="color:#cc0000;">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+
+                <div class="input-box">
+                    <input type="text" name="username" placeholder="Usuario" required>
+                    <i class='bx bxs-user'></i>
+                </div>
+                <div class="input-box password-container">
+                    <input type="password" name="password" id="password" placeholder="Contraseña" required>
+                    <i class='bx bxs-lock-alt'></i>
+                    <i class='bx bxs-show toggle-password' id="togglePassword"></i>
+                </div>
+                <div class="forgot-link">
+                    <a href="{% url 'password_reset' %}">¿Olvidaste tu contraseña?</a>
+                </div>
+                
+                {# ¡IMPORTANTE! Campo oculto 'next' para la redirección #}
+                {# Esto asegura que si la URL de login original tenía ?next=/admin/algo, se envíe con el POST #}
+                <input type="hidden" name="next" value="{{ request.GET.next|default:'' }}">
+                
+                <button type="submit" class="btn">Ingresar</button>
+            </form>
+            <a href="{% url 'index' %}"><button class="btn-inicio">Inicio</button></a>
+        </div>
+
+        <div class="toggle-box">
+            <div class="toggle-panel toggle-left">
+                <h1>¡Bienvenido a Ombu!</h1>
+                <p>Ingresa tus credenciales para acceder al sistema</p>
+            </div>
+            <div class="toggle-panel toggle-right">
+                <h1>¡Bienvenido de nuevo!</h1>
+                <p>¿Ya tienes una cuenta?</p>
+                <button class="btn login-btn">Iniciar sesión</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static '/js/login.js' %}"></script>
+</body>
+
+</html>

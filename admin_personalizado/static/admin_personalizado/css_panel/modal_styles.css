@@ -1,0 +1,124 @@
+/* --- Estilos para el Modal --- */
+
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed;
+    z-index: 9999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+    justify-content: center; /* ¡Importante para centrar con display: flex! */
+    align-items: center; /* ¡Importante para centrar con display: flex! */
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal.is-active { /* Esta es la regla clave para mostrarlo */
+    display: flex; 
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 850px;
+    border-radius: 8px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: slideIn 0.4s ease-out;
+}
+
+.close-button {
+    color: #aaa;
+    font-size: 32px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #000;
+    text-decoration: none;
+}
+
+.modal-buttons { /* Añade estilos para el contenedor de botones del modal */
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 20px;
+}
+
+.modal-buttons .button { /* Estilos generales para los botones dentro del modal */
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.2s, transform 0.2s;
+}
+
+.modal-buttons .button-red {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+}
+
+.modal-buttons .button-red:hover {
+    background-color: #c82333;
+    transform: translateY(-1px);
+}
+
+.modal-buttons .button { /* Para el botón de cancelar */
+    background-color: #6c757d;
+    color: white;
+    border: none;
+}
+
+.modal-buttons .button:hover {
+    background-color: #5a6268;
+    transform: translateY(-1px);
+}
+
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* Asegura que el body no haga scroll cuando el modal está abierto */
+/* Este lo puedes quitar si tu JS ya no añade esta clase al body */
+/* body.modal-open {
+    overflow: hidden;
+} */
+
+/* Media Queries para responsividad del modal */
+@media screen and (max-width: 768px) {
+    .modal-content {
+        padding: 15px;
+        width: 95%;
+    }
+    .close-button {
+        font-size: 28px;
+    }
+    .modal-buttons {
+        flex-direction: column;
+    }
+    .modal-buttons .button {
+        width: 100%;
+        text-align: center;
+    }
+}

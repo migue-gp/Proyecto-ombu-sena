@@ -1,0 +1,50 @@
+/* Ajustar la posición del header y hacerlo más pequeño */
+#header {
+    height: 60px;
+    line-height: 60px;
+    padding: 5px 20px;
+}
+
+/* Cambiar la posición de los botones de acción */
+.object-tools {
+    position: absolute;
+    top: 10px;
+    right: 30px;
+}
+
+/* Reorganizar la disposición de los formularios */
+.form-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding: 15px 10px;
+}
+
+/* Hacer que los campos de formulario ocupen menos espacio */
+.form-row .field-box {
+    width: 48%;
+    margin-right: 0;
+}
+
+/* Ajustar la navegación cuando está en la parte superior */
+.horizontal-menu #header {
+    padding-bottom: 0;
+}
+
+.horizontal-menu #header #navigation {
+    margin-top: 10px;
+}
+
+/* Personalizar la barra de navegación superior */
+.horizontal-menu #navigation {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #ddd;
+    padding: 5px 0;
+}
+
+/* Mejorar el aspecto de los filtros de lista */
+.changelist-filter {
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+}

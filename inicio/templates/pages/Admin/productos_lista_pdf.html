@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ title }}</title>
+    <meta charset="UTF-8">
+    <style>
+        @page {
+            size: A4;
+            margin: 1.5cm;
+            @frame footer {
+                -pdf-frame-content: footerContent;
+                bottom: 0cm;
+                margin-left: 1.5cm;
+                margin-right: 1.5cm;
+                height: 1cm;
+            }
+        }
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 10pt;
+            color: #333;
+            margin: 0; /* Asegurarse de que el body no tenga margen para el footer fixed */
+        }
+        h1 {
+            text-align: center;
+            color: #0056b3;
+            font-size: 20pt;
+            margin-bottom: 25px;
+            padding-top: 10px;
+        }
+        h2 {
+            font-size: 16pt;
+            color: #007bff;
+            margin-top: 25px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #f2f2f2;
+            color: #555;
+            font-size: 11pt;
+            font-weight: bold;
+        }
+        .table-header {
+            background-color: #e9ecef;
+            font-weight: bold;
+        }
+        .text-right {
+            text-align: right;
+        }
+        .info-date {
+            text-align: right;
+            font-size: 9pt;
+            margin-bottom: 15px;
+        }
+        .footer {
+            width: 100%;
+            text-align: center;
+            font-size: 8pt;
+            color: #666;
+            border-top: 1px solid #eee;
+            padding-top: 5px;
+        }
+        .page-number::before {
+            content: "Página " counter(page) " de " counter(pages);
+        }
+        .product-image {
+            max-width: 40px; /* Tamaño más pequeño para la miniatura en tabla */
+            max-height: 40px;
+            object-fit: cover; /* Para que la imagen cubra el espacio sin distorsionarse */
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <div class="info-date">
+        Fecha de Generación: {{ date }}
+    </div>
+
+    {% if categories_data %}
+        {% for category_name, products_list in categories_data %}
+            <h2>{{ category_name }}</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Título</th>
+                        <th>Precio</th>
+                        <th>Cantidad Disp.</th>
+                        <th>Estado</th>
+                        <th>Descripción</th>
+                        <th>Foto</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products_list %}
+                    <tr>
+                        <td>{{ product.id }}</td>
+                        <td>{{ product.titulo }}</td>
+                        <td class="text-right">${{ product.precio|floatformat:2 }}</td>
+                        <td>{{ product.cantidad_disponible }}</td>
+                        <td>{{ product.get_estado_display }}</td>
+                        <td>{{ product.descripcion|truncatechars:70 }}</td>
+                        <td>
+                            {% if product.foto %}
+                                <img src="{{ MEDIA_URL }}{{ product.foto.name }}" class="product-image" alt="Foto">
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% endfor %}
+    {% else %}
+        <p style="text-align: center; color: red; margin-top: 50px;">No hay productos para mostrar en el reporte.</p>
+    {% endif %}
+
+    <div id="footerContent">
+        <div class="footer">
+            Reporte general de productos por categoría.
+            <br/>
+            <span class="page-number"></span>
+        </div>
+    </div>
+</body>
+</html>

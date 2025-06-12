@@ -1,0 +1,228 @@
+/* Estilos para el formulario de agregar productos (y otros si se generaliza el selector) */
+body #content-main form#producto_form, /* Cambiado de #usuario_form a #producto_form */
+body #content-main form.change-form { /* Opcional: si quieres que afecte a todos los change-form */
+    background-color: #fffaf0;
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    max-width: 900px; /* Aumentado */
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+}
+
+body #content-main .form-row {
+    display: block;
+    align-items: center;
+    margin-bottom: 15px;
+    flex-wrap: wrap; 
+}
+
+body #content-main .form-row label {
+    flex-basis: 150px;
+    margin-right: 10px;
+    font-weight: 500;
+    color: hsl(130, 88%, 46%);
+    text-align: right;
+}
+
+body #content-main .form-row input[type="text"],
+body #content-main .form-row input[type="email"],
+body #content-main .form-row input[type="password"],
+body #content-main .form-row input[type="number"], /* Agregado para campos numéricos */
+body #content-main .form-row textarea, /* Agregado para campos de texto largos */
+body #content-main .form-row select {
+    flex: 1; 
+    padding: 1px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+    box-sizing: border-box;
+    font-size: 1rem;
+    color: #495057;
+    background-color: #fff;
+    min-width: 0; 
+}
+
+/* Ajuste para cuando los elementos se envuelven */
+body #content-main .form-row:where(.flex-wrap) > * {
+    flex-basis: 100%;
+    text-align: left; 
+    margin-bottom: 5px; 
+}
+
+body #content-main .form-row:where(.flex-wrap) label {
+    text-align: left; 
+}
+
+body #content-main .form-row .flex-container.checkbox-row {
+    display: flex;
+    align-items: center;
+    margin-left: 0; /* Eliminar el margen izquierdo fijo */
+    padding-left: 150px; 
+    margin-bottom: 5px;
+}
+
+body #content-main .form-row .flex-container.checkbox-row input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+body #content-main .form-row .flex-container.checkbox-row label.vCheckboxLabel {
+    margin-left: 0;
+    font-weight: normal;
+}
+
+body #content-main .submit-row {
+    padding: 1rem 0;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+body #content-main .submit-row input[type="submit"],
+body #content-main .submit-row button {
+    background-color: #b2bdb5;
+    color: #000000;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.15s ease-in-out;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+
+body #content-main .submit-row input[type="submit"]:hover,
+body #content-main .submit-row button:hover {
+    background-color: #218838;
+}
+
+body #content-main h1 {
+    color: #28a745;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #ced4da;
+    padding-bottom: 0.5rem;
+}
+
+body #content-main h2.fieldset-heading {
+    color: #495057;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.25rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+body #content-main .help {
+    color: #6c757d;
+    font-size: 0.8rem;
+    display: block;
+    margin-top: 0.15rem;
+    margin-left: 0; /* Eliminar el margen izquierdo fijo */
+    padding-left: 150px; /* Usar padding para la sangría, si es necesario */
+}
+
+
+/* DEBUGGING: Asegúrate de que los errores sean visibles */
+ul.errorlist {
+    display: block !important;
+    visibility: visible !important;
+    background-color: red !important;
+    color: white !important;
+    padding: 5px !important;
+    margin: 5px 0 !important;
+    border: 1px solid darkred !important;
+    list-style: none !important;
+    font-weight: bold !important;
+    z-index: 9999 !important; /* Asegura que esté por encima de todo */
+    position: relative !important; /* Asegura que sea posicionado */
+}
+
+ul.errorlist li {
+    color: white !important;
+}
+
+/* Si usas la Opción 2, asegúrate de cambiar esta línea también */
+.content-main #producto_form p{ /* Cambiado de #usuario_form a #producto_form */
+    color: rgb(10, 10, 10);
+}
+
+#producto_form .errornote { /* Cambiado de #usuario_form a #producto_form */
+    color: black;
+}
+
+
+
+
+/* --- Media Queries para responsividad en agregar_forms.css --- */
+
+@media screen and (max-width: 768px) {
+    body #content-main form#producto_form,
+    body #content-main form.change-form {
+        padding: 15px; /* Reducir padding en tablets */
+    }
+
+    body #content-main .form-row {
+        flex-direction: column; /* Apilar etiquetas y campos */
+        align-items: flex-start; /* Alinear a la izquierda cuando se apilan */
+    }
+
+    body #content-main .form-row label {
+        flex-basis: auto; /* Dejar que la etiqueta ocupe el espacio necesario */
+        width: 100%; /* Ocupar todo el ancho para la etiqueta */
+        text-align: left; /* Alinear texto a la izquierda */
+        margin-right: 0;
+        margin-bottom: 5px; /* Espacio debajo de la etiqueta */
+    }
+
+    body #content-main .form-row input[type="text"],
+    body #content-main .form-row input[type="number"],
+    body #content-main .form-row input[type="email"],
+    body #content-main .form-row input[type="password"],
+    body #content-main .form-row input[type="file"],
+    body #content-main .form-row select,
+    body #content-main .form-row textarea {
+        width: 100%; /* Ocupar todo el ancho disponible */
+        max-width: 100%; /* Asegurar que no desborde */
+        font-size: 1rem; /* Aumentar ligeramente la fuente para mejor legibilidad */
+    }
+
+    body #content-main .help {
+        padding-left: 0; /* Eliminar padding fijo */
+        margin-left: 0;
+        width: 100%; /* Ocupar todo el ancho */
+        text-align: left;
+    }
+
+    body #content-main h1 {
+        font-size: 1.5rem; /* Reducir tamaño del título */
+        padding-bottom: 0.3rem;
+        margin-bottom: 1rem;
+    }
+
+    body #content-main h2.fieldset-heading {
+        font-size: 0.9rem; /* Reducir tamaño del subtítulo */
+        margin-top: 0.8rem;
+        margin-bottom: 0.6rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    body #content-main form#producto_form,
+    body #content-main form.change-form {
+        padding: 10px; /* Más compacto en móviles */
+    }
+
+    body #content-main .form-row input[type="text"],
+    body #content-main .form-row input[type="number"],
+    body #content-main .form-row input[type="email"],
+    body #content-main .form-row input[type="password"],
+    body #content-main .form-row input[type="file"],
+    body #content-main .form-row select,
+    body #content-main .form-row textarea {
+        padding: 0.5rem 0.7rem; /* Reducir padding de campos */
+        font-size: 0.9rem;
+    }
+}

@@ -1,0 +1,195 @@
+/* Estilos para la página de confirmación de eliminación (que ahora se cargará dentro del modal) */
+
+/* Contenedor principal de la página de eliminación (aplicará al contenido dentro del modal) */
+body.delete-confirmation #content-main {
+    padding: 2rem !important; /* Añade relleno al contenedor principal */
+    border: 1px solid #ddd !important; /* Borde suave */
+    border-radius: 0.5rem !important; /* Bordes redondeados */
+    background-color: #f9f9f9 !important; /* Fondo gris muy claro para el contenedor */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important; /* Sombra sutil para profundidad */
+    max-width: 800px !important; /* Limita el ancho para mejor legibilidad */
+    margin: 30px auto !important; /* Centra el contenedor en la página */
+}
+
+/* Estilos para el título principal de la página */
+body.delete-confirmation #content-main h1 {
+    color: #dc3545 !important; /* Rojo intenso y forzado para el título */
+    border-bottom: 2px solid #dc3545 !important; /* Línea inferior roja */
+    padding-bottom: 0.75rem !important;
+    margin-bottom: 1.5rem !important;
+    font-size: 2.5rem !important; /* Tamaño más grande para destacar */
+    font-weight: bold !important;
+    text-align: center !important; /* Centra el título */
+}
+
+/* Estilos para los párrafos de texto */
+body.delete-confirmation #content-main p { /* Corregido a body.delete_confirmation para consistencia */
+    font-size: 1.15rem !important;
+    color: #333 !important; /* Texto más oscuro para mejor legibilidad */
+    margin-bottom: 1.25rem !important;
+    line-height: 1.6 !important;
+}
+
+/* Estilos para los subtítulos (ej. "Objetos relacionados") */
+body.delete-confirmation #content-main h2 {
+    color: #c82333 !important; /* Rojo más oscuro para los subtítulos */
+    margin-top: 2rem !important;
+    margin-bottom: 1rem !important;
+    border-bottom: 1px solid #c82333 !important; /* Línea inferior para subtítulos */
+    padding-bottom: 0.5rem !important;
+    font-size: 1.8rem !important; /* Tamaño más grande para destacar */
+    font-weight: bold !important;
+    background-color: transparent !important; /* Asegura fondo transparente */
+}
+
+/* Estilos para la lista de objetos a eliminar */
+body.delete-confirmation #content-main ul#deleted-objects {
+    list-style: none !important; /* Elimina los puntos de la lista */
+    padding-left: 0 !important;
+    margin-bottom: 1.75rem !important;
+    background-color: #fdecea !important; /* Fondo rojo muy claro y suave */
+    border: 1px solid #fcc2c3 !important; /* Borde rojo claro */
+    border-radius: 0.3rem !important;
+    padding: 1rem !important;
+}
+
+body.delete-confirmation #content-main ul#deleted-objects li {
+    color: #a71d2a !important; /* Rojo oscuro para los elementos de la lista */
+    font-weight: bold !important;
+    margin-bottom: 0.75rem !important;
+    padding: 0.5rem 0 !important;
+    border-bottom: 1px dotted #fcc2c3 !important; /* Separador suave entre elementos */
+}
+
+body.delete-confirmation #content-main ul#deleted-objects li:last-child {
+    border-bottom: none !important; /* Elimina el borde inferior del último elemento */
+}
+
+body.delete-confirmation #content-main ul#deleted-objects li a {
+    color: #a71d2a !important;
+    text-decoration: underline !important;
+}
+
+/* Estilos para el contenedor de los botones de acción (Sí, Cancelar) */
+body.delete-confirmation #content-main form div {
+    display: flex !important; /* Usa flexbox para alinear botones */
+    gap: 1.5rem !important; /* Espacio entre los botones */
+    align-items: center !important;
+    margin-top: 2.5rem !important; /* Más margen superior para separarlos del contenido */
+    justify-content: center !important; /* Centra los botones horizontalmente */
+}
+
+/* Estilos para el botón de Confirmar eliminación */
+body.delete-confirmation #content-main form input[type="submit"] {
+    background-color: #dc3545 !important; /* Rojo llamativo para el botón de confirmar */
+    color: #fff !important;
+    padding: 1.1rem 2.2rem !important;
+    border: none !important;
+    border-radius: 0.3rem !important;
+    cursor: pointer !important;
+    font-size: 1.1rem !important;
+    font-weight: bold !important;
+    transition: background-color 0.15s ease-in-out, transform 0.15s ease-in-out !important; /* Transición suave al pasar el ratón */
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1) !important;
+}
+
+body.delete-confirmation #content-main form input[type="submit"]:hover {
+    background-color: #c82333 !important; /* Rojo más oscuro al pasar el ratón */
+    transform: translateY(-2px) !important; /* Pequeño efecto de elevación */
+}
+
+/* Estilos para el botón de Cancelar */
+body.delete-confirmation #content-main form a.cancel-link {
+    background-color: #6c757d !important; /* Gris neutro para el botón de cancelar */
+    color: #fff !important;
+    padding: 1.1rem 2.2rem !important;
+    border-radius: 0.3rem !important;
+    text-decoration: none !important;
+    transition: background-color 0.15s ease-in-out, transform 0.15s ease-in-out !important; /* Transición suave al pasar el ratón */
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.1) !important;
+}
+
+body.delete-confirmation #content-main form a.cancel-link:hover {
+    background-color: #5a6268 !important; /* Gris más oscuro al pasar el ratón */
+    transform: translateY(-2px) !important; /* Pequeño efecto de elevación */
+}
+
+/* Ajuste adicional para el primer párrafo */
+body.delete-confirmation #content-main > p:first-of-type {
+    margin-top: 0 !important; /* Elimina el margen superior del primer párrafo */
+}
+
+
+/* --- Estilos para el Modal --- */
+
+/* Fondo oscurecido del modal */
+.modal {
+    display: none; /* Oculto por defecto */
+    position: fixed; /* Posicionamiento fijo para cubrir toda la ventana */
+    z-index: 9999; /* Asegura que esté por encima de todo */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Habilita el scroll si el contenido es demasiado grande */
+    background-color: rgba(0,0,0,0.7); /* Fondo semi-transparente oscuro */
+    justify-content: center; /* Centra el contenido horizontalmente (usando display: flex) */
+    align-items: center; /* Centra el contenido verticalmente (usando display: flex) */
+    animation: fadeIn 0.3s ease-out; /* Animación de aparición */
+}
+
+/* Contenedor del contenido del modal */
+.modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Margen automático para centrado */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Ancho del modal */
+    max-width: 850px; /* Ancho máximo para pantallas grandes */
+    border-radius: 8px;
+    position: relative; /* Para posicionar el botón de cerrar */
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    animation: slideIn 0.4s ease-out; /* Animación de entrada */
+}
+
+/* Botón de cerrar */
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 32px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+
+@media screen and (max-width: 480px) {
+    body.delete-confirmation #content-main {
+        padding: 1rem !important;
+        margin: 15px auto !important;
+    }
+
+    body.delete-confirmation #content-main h1 {
+        font-size: 1.7rem !important;
+    }
+
+    body.delete-confirmation #content-main p {
+        font-size: 0.95rem !important;
+    }
+
+    body.delete-confirmation #content-main button[type="submit"],
+    body.delete-confirmation #content-main a.cancellink {
+        padding: 0.6rem 1rem !important;
+        font-size: 0.95rem !important;
+    }
+}

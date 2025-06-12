@@ -1,0 +1,104 @@
+{% load static %}
+{% load custom_tags %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reserva</title>
+    <link rel="stylesheet" href="{% static '/css/reservas.css' %}">
+</head>
+<body>
+    <!-- Menú superior -->
+    <button class="menu-toggle" onclick="toggleMenu()">☰</button>
+    <ul class="main-menu" id="mainMenu">
+        <li class="admin-item"><a href="{% url 'admin' %}">Inicio</a></li>
+        {% if user.is_authenticated %}
+            <li class="admin-item"><a href="{% url 'cervezas' %}">Productos</a></li>
+            <li class="admin-item"><a href="{% url 'mesas' %}">Mesas</a></li>
+            {% if user|has_group:"ombu" %}
+                <li class="admin-item"><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                <li class="admin-item"><a href="{% url 'reserva' %}">Reserva</a></li>
+                <li class="admin-item"><a href="#">Usuarios</a></li>
+            {% endif %}
+            <li class="admin-item"><a href="{% url 'logout' %}">CERRAR SESIÓN</a></li>
+        {% endif %}
+    </ul>
+
+    <div class="titulo"><h1>OMBU RESERVAS</h1></div>
+
+    <p>Bienvenido a las reservas de OMBÚ, donde la pasión por la cocina se encuentra con un ambiente único y acogedor.<br> Nos encantaría que te unas a nosotros para una experiencia inolvidable.</p>
+
+    <p><strong>Contactos de reserva</strong></p>
+
+    <div class="container">
+        <form id="formReserva">
+            <details open>
+                <summary>Tipo de evento</summary>
+                <div class="radio-group">
+                    <label><input type="radio" name="evento" value="Cumpleaños"> Cumpleaños</label>
+                    <label><input type="radio" name="evento" value="Despedida"> Despedida</label>
+                    <label><input type="radio" name="evento" value="Comida familiar"> Comida familiar</label>
+                    <label><input type="radio" name="evento" value="Aniversario"> Aniversario</label>
+                    <label><input type="radio" name="evento" value="Fiesta sorpresa"> Fiesta sorpresa</label>
+                    <label><input type="radio" name="evento" value="Fiesta de graduación"> Fiesta de graduación</label>
+                    <label><input type="radio" name="evento" value="Reunión con amigos"> Reunión con amigos</label>
+                    <label><input type="radio" name="evento" value="Evento corporativo"> Evento corporativo</label>
+                    <label><input type="radio" name="evento" value="Otro"> Otro</label>
+                </div>
+            </details>
+
+            <details open>
+                <summary>Información de la reserva</summary>
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="text" id="telefono" required>
+                </div>
+                <div class="form-group">
+                    <label for="personas">Cantidad de personas</label>
+                    <input type="number" id="personas" required>
+                </div>
+            </details>
+
+            <div class="form-group">
+                <button type="submit" class="confirmar-btn">Confirmar Reserva</button>
+            </div>
+        </form>
+
+        <div id="mensaje"></div>
+    </div>
+
+    <script>
+        // Alternar menú en móviles
+        function toggleMenu() {
+            document.getElementById('mainMenu').classList.toggle('show');
+        }
+
+        // Manejo del formulario
+        document.getElementById('formReserva').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const evento = document.querySelector('input[name="evento"]:checked');
+            const nombre = document.getElementById("nombre").value.trim();
+            const telefono = document.getElementById("telefono").value.trim();
+            const personas = document.getElementById("personas").value.trim();
+
+            if (!evento || !nombre || !telefono || !personas) {
+                alert("Por favor completa todos los campos.");
+                return;
+            }
+
+            alert(`Reserva confirmada:\nEvento: ${evento.value}\nNombre: ${nombre}\nTeléfono: ${telefono}\nPersonas: ${personas}`);
+
+            // Si quisieras enviar a un backend con AJAX:
+            // fetch('/ruta-del-backend/', { method: 'POST', body: datos, headers: {'X-CSRFToken': '...'}})
+        });
+    </script>
+</body>
+<<<<<<< HEAD
+</html>

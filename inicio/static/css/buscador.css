@@ -1,0 +1,144 @@
+/* Contenedor principal del buscador */
+.search-container {
+  width: 100%;
+  padding: 1rem 0;
+  background: rgba(0, 0, 0, 0.8); /* Fondo semitransparente más oscuro */
+  position: fixed; /* Mantiene la posición fija */
+  top: 80px; /* Posicionado debajo de la barra de navegación (altura 80px) */
+  left: 0; 
+  z-index: 999; /* Menor que la barra de navegación (1000) */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5); 
+  backdrop-filter: blur(8px); 
+  transition: all 0.3s ease; 
+}
+
+/* Caja del buscador */
+.search-box {
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto;
+  display: flex;
+  gap: 8px;
+}
+
+/* Input transparente con borde sutil */
+.search-input {
+  flex: 1;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  font-family: 'Work Sans', sans-serif;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 30px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.search-input:focus {
+  border-color: #4CAF50;
+  background-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.3);
+}
+
+/* Botón de búsqueda visible */
+.search-button {
+  padding: 0 1.5rem;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-family: 'Work Sans', sans-serif;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.search-button:hover {
+  background-color: #45a049;
+  transform: scale(1.02);
+}
+
+.search-button svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Ajuste para el contenido principal - evita que se oculte debajo del buscador */
+.cards-container {
+  padding-top: 160px; /* 80px barra navegación + 80px buscador aproximadamente */
+}
+
+/* Si tienes un main-content, también ajústalo */
+.main-content {
+  padding-top: 160px; /* 80px barra navegación + 80px buscador aproximadamente */
+}
+
+/* Ajuste específico para el menu-container si existe */
+.menu-container {
+  padding-top: 160px; /* 80px barra navegación + 80px buscador aproximadamente */
+}
+
+/* Animación para que el buscador aparezca/desaparezca suavemente */
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Aplicar animación al buscador */
+.search-container-visible {
+  animation: fadeInDown 0.3s ease-out forwards;
+}
+
+/* Adaptación para pantallas pequeñas */
+@media (max-width: 768px) {
+  .search-container {
+    padding: 0.8rem 0;
+    top: 80px; /* Mantiene la posición debajo de la barra de navegación en móvil */
+  }
+  
+  .search-box {
+    width: 95%;
+  }
+  
+  .search-input {
+    font-size: 0.9rem;
+    padding: 0.6rem 0.8rem;
+  }
+  
+  .search-button {
+    padding: 0 1.2rem;
+  }
+
+  /* Ajustes para móvil - menos padding ya que los elementos son más pequeños */
+  .cards-container,
+  .main-content,
+  .menu-container {
+    padding-top: 140px; /* Menos padding en móvil */
+  }
+}
+
+/* Clase auxiliar para ocultar el buscador si es necesario */
+.search-container.hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+/* Clase auxiliar para mostrar el buscador */
+.search-container.visible {
+  transform: translateY(0);
+  opacity: 1;
+}

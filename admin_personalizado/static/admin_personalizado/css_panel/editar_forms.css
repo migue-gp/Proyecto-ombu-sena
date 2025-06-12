@@ -1,0 +1,145 @@
+/* Estilos para la página de modificar usuario (editar) - Compacto */
+
+/* Importar los estilos generales de agregar_forms.css */
+@import url("agregar_forms.css");
+
+body #content-main h1 {
+    color: #ffc107;
+    border-bottom-color: #ffc107;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    font-size: 1.75rem;
+}
+
+body #content-main h2.fieldset-heading {
+    color: #333;
+    border-bottom-color: #f0ad4e;
+    font-size: 1rem;
+    margin-top: 1rem;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.25rem;
+}
+
+body #content-main form#usuario_form {
+    background-color: #fffaf0;
+    border-color: #f0e68c;
+    padding: 20px;
+    margin-bottom: 15px;
+    max-width: 900px; /* Ancho máximo del formulario - ¡IMPORTANTE! */
+    margin-left: auto; /* Centrar horizontalmente */
+    margin-right: auto; /* Centrar horizontalmente */
+    width: 100%; /* Asegurar que el formulario ocupe el ancho disponible */
+}
+
+body #content-main .submit-row {
+    justify-content: space-between;
+    border-top-color: #eee;
+    padding: 0.75rem 0;
+    gap: 0.5rem;
+}
+
+body #content-main .submit-row input[type="submit"],
+body #content-main button {
+    background-color: #b2bdb5;
+    border-color: #17a2b8;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.9rem;
+    border-radius: 4px;
+}
+
+body #content-main .submit-row input[type="submit"]:hover,
+body #content-main button:hover {
+    background-color: #138496;
+    border-color: #138496;
+}
+
+/* Estilos específicos para el botón de eliminar */
+body #content-main .submit-row a.deletelink {
+    background-color: #dc3545;
+    color: #fff;
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    font-size: 0.9rem;
+}
+
+body #content-main .submit-row a.deletelink:hover {
+    background-color: #c82333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+
+/* DEBUGGING: Asegúrate de que los errores sean visibles */
+ul.errorlist {
+    display: block !important;
+    visibility: visible !important;
+    background-color: red !important;
+    color: white !important;
+    padding: 5px !important;
+    margin: 5px 0 !important;
+    border: 1px solid darkred !important;
+    list-style: none !important;
+    font-weight: bold !important;
+    z-index: 9999 !important; /* Asegura que esté por encima de todo */
+    position: relative !important; /* Asegura que sea posicionado */
+}
+
+ul.errorlist li {
+    color: white !important;
+}
+
+/* --- Media Queries para responsividad en editar_forms.css --- */
+
+@media screen and (max-width: 768px) {
+    body #content-main h1 {
+        font-size: 1.5rem; /* Reducir tamaño de título */
+        margin-bottom: 0.8rem;
+    }
+
+    body #content-main h2.fieldset-heading {
+        font-size: 0.9rem;
+        margin-top: 0.8rem;
+        margin-bottom: 0.6rem;
+    }
+
+    body #content-main form#usuario_form {
+        padding: 15px; /* Reducir padding */
+        margin-bottom: 10px;
+    }
+
+    body #content-main .submit-row {
+        flex-direction: column; /* Apilar botones */
+        align-items: center; /* Centrar botones apilados */
+        gap: 10px; /* Reducir espacio entre botones */
+        margin-top: 20px;
+        padding-top: 10px;
+    }
+
+    body #content-main .submit-row input[type="submit"],
+    body #content-main button,
+    body #content-main .submit-row a.deletelink {
+        width: 100%; /* Que los botones ocupen todo el ancho */
+        text-align: center;
+        padding: 0.7rem 1rem; /* Ajustar padding */
+        font-size: 0.95rem; /* Ajustar tamaño de fuente */
+    }
+}
+
+@media screen and (max-width: 480px) {
+    body #content-main h1 {
+        font-size: 1.3rem;
+    }
+
+    body #content-main form#usuario_form {
+        padding: 10px;
+    }
+
+    body #content-main .submit-row input[type="submit"],
+    body #content-main button,
+    body #content-main .submit-row a.deletelink {
+        padding: 0.5rem 0.8rem;
+        font-size: 0.9rem;
+    }
+}

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Recibo de Pedido #{{ pedido.id }}</title>
+    <meta charset="UTF-8">
+    <style>
+        /* Estilos básicos para el PDF - ¡Solo CSS! Evita JavaScript. */
+        body { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 10pt; margin: 20pt; line-height: 1.4; color: #333; }
+        h1, h2, h3 { text-align: center; color: #0056b3; margin-bottom: 10pt; }
+        .header-info { text-align: center; margin-bottom: 20pt; font-size: 9pt; color: #666; }
+        .info-box { border: 1px solid #eee; padding: 10pt; margin-bottom: 20pt; background-color: #f9f9f9; border-radius: 5px; }
+        .info-box p { margin: 5pt 0; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15pt; }
+        th, td { border: 1px solid #ddd; padding: 8pt; text-align: left; vertical-align: top; }
+        th { background-color: #f2f2f2; font-weight: bold; }
+        .text-right { text-align: right; }
+        .total-row td { font-weight: bold; background-color: #e6f7ff; }
+        .footer { margin-top: 30pt; text-align: center; font-size: 9pt; color: #666; }
+        
+        /* Ejemplo de cómo incluir una imagen de STATIC_URL (si tienes una) */
+        /*
+        .logo {
+            display: block;
+            margin: 0 auto 10pt;
+            width: 100px; 
+            height: auto;
+        }
+        */
+    </style>
+</head>
+<body>
+    <div class="header">
+        {# Si tienes un logo, puedes incluirlo así (asegúrate de que exista en tus staticfiles) #}
+        {# <img class="logo" src="{{ STATIC_URL }}img/logos/mi_logo.png" alt="Logo Restaurante"> #}
+        <h1>Informacion de Pedido</h1>
+        <h2>Ombú</h2> {# Cambia esto por el nombre de tu restaurante #}
+        <div class="header-info">
+            <p>Sogamoso, Boyacá, Colombia</p>
+            <p>Teléfono: 123456789 | Email: ombus123@ejemplo.com</p>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <p><strong>Número de Pedido:</strong> {{ pedido.id }}</p>
+        <p>
+            <strong>Mesa:</strong>
+            {% if pedido.mesa %}
+                {{ pedido.mesa.numero }}
+            {% else %}
+                N/A
+            {% endif %}
+        </p>
+        <p><strong>Fecha y Hora:</strong> {{ pedido.fecha|date:"d/m/Y H:i" }}</p>
+        <p><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
+    </div>
+
+    <h3>Detalle del Pedido</h3>
+    {% if detalles_pedido %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Opción</th>
+                    <th>Cantidad</th>
+                    <th class="text-right">Precio Unitario</th>
+                    <th class="text-right">Total por Producto</th> {# Etiqueta cambiada para mayor claridad #}
+                </tr>
+            </thead>
+            <tbody>
+                {% for detalle in detalles_pedido %}
+                <tr>
+                    <td>{{ detalle.producto.titulo }}</td> {# CAMBIO CLAVE: de .nombre a .titulo #}
+                    <td>{{ detalle.opcion|default:"N/A" }}</td>
+                    <td>{{ detalle.cantidad }}</td>
+                    <td class="text-right">${{ detalle.precio_unitario|floatformat:2 }}</td>
+                    <td class="text-right">${{ detalle.subtotal|floatformat:2 }}</td> {# Esto ahora usará la nueva propiedad 'subtotal' #}
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot>
+                <tr class="total-row">
+                    <td colspan="4" class="text-right"><strong>Total del Pedido:</strong></td>
+                    <td class="text-right"><strong>${{ pedido.total|floatformat:2 }}</strong></td>
+                </tr>
+            </tfoot>
+        </table>
+    {% else %}
+        <p>No hay productos en este pedido.</p>
+    {% endif %}
+
+    <div class="footer">
+        <p>¡Gracias por tu preferencia!</p>
+        <p>Documento generado el {% now "d/m/Y H:i" %}</p>
+    </div>
+</body>
+</html>

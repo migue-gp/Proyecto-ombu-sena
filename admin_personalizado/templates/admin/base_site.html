@@ -1,0 +1,156 @@
+    {% extends "admin/base.html" %}
+    {% load static i18n %}
+    {% block userlinks %}
+    {{ block.super }}
+    /
+    <a href="{% url 'perfil' %}">{% translate 'Perfil' %}</a>
+    {% endblock %}
+    {% block extrastyle %}{{ block.super }}
+    <link rel="stylesheet" href="{% static 'admin_personalizado/css_panel/admin.css' %}">
+    <link rel="stylesheet" href="{% static 'admin_personalizado/css_panel/agregar_forms.css' %}">
+    <link rel="stylesheet" href="{% static 'admin_personalizado/css_panel/editar_forms.css' %}">
+    <link rel="stylesheet" href="{% static 'admin_personalizado/css_panel/delete_forms.css' %}"> 
+    <link rel="stylesheet" href="{% static 'admin_personalizado/css_panel/modal_styles.css' %}"> 
+    {% comment %} <link rel="stylesheet" type="text/css" href="{% static 'admin_personalizado/css_panel/bar_filtros.css' %}"> {% endcomment %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <style id="dynamic-bg-style">
+        
+        body, #content {
+            background-color: #1A3330; 
+            background-image: url('/static/img/logos_o_otros/ombu_fondo.jpg'); 
+            background-size: cover; 
+            background-repeat: no-repeat; 
+            background-attachment: fixed;
+            transition: background 0.5s ease;
+        }
+    </style>
+
+    {% endblock %}
+
+
+    {% block branding %}
+    <div class="navbar">
+        <div class="brand">
+            <h1 id="site-name">
+                <a href="{% url 'admin:index' %}">{{ site_header|default:_('OMBÚ') }}</a></h1>
+        </div>
+        <button class="hamburger-menu" aria-label="Toggle navigation">
+            <i class="fas fa-bars"></i>
+        </button>
+        <ul class="main-nav">
+            {% for app in available_apps %}
+                {% if app.app_label == 'inicio' %}
+                    {% for model in app.models %}
+                        <li><a href="{{ model.admin_url }}">{{ model.name }}</a></li>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endblock %}
+
+    {% comment %} {% block branding %}
+    <div class="navbar">
+        <div class="brand">
+            <h1 id="site-name">
+                <a href="{% url 'admin:index' %}">{{ site_header|default:_('OMBÚ') }}</a></h1>
+                
+                {% if request.user.is_authenticated and request.user.perfil.avatar %}
+                <a href="{% url 'perfil' %}">
+                    <img src="{{ request.user.perfil.avatar.url }}"
+                        alt="Avatar"
+                        style="height:80px; width:80px; border-radius:50%; margin-left:10px; vertical-align:middle;">
+                </a>
+                {% endif %}
+        </div>
+        <ul class="main-nav">
+            {% for app in available_apps %}
+                {% if app.app_label == 'inicio' %}
+                    {% for model in app.models %}
+                        <li><a href="{{ model.admin_url }}">{{ model.name }}</a></li>
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endblock %} {% endcomment %}
+
+    {% block nav-global %}{% endblock %}
+
+
+    {% comment %} {% block content %}
+    {{ block.super }}
+    <div class="module">
+        <h2>{% translate 'Personalización del Fondo' %}</h2>
+        <div class="form-row">
+            <label for="admin-bg-image">{% translate 'URL de la Imagen de Fondo:' %}</label>
+            <input type="text" id="admin-bg-image" name="admin-bg-image" placeholder="{% translate 'Ingrese la URL de la imagen' %}">
+        </div>
+    </div>
+    {% endblock %} {% endcomment %}
+
+
+    {% block footer %}
+        <div id="delete-confirmation-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">&times;</span>
+                <h2>Confirmar Eliminación</h2>
+                <p id="modal-delete-message">¿Estás seguro de que quieres eliminar <strong id="object-name-to-delete">este elemento</strong>?</p> 
+                <div class="modal-buttons">
+                    <button id="confirm-delete-button" class="button button-red">Eliminar</button>
+                    <button id="cancel-delete-button" class="button">Cancelar</button>
+                </div>
+            </div>
+        </div>
+        {{ block.super }} 
+    {% endblock %}
+
+    {% block extrajs %}
+    {{block.super}}
+    <script src="{% static 'admin_personalizado/js_panel/delete_forms.js' %}" defer></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Obtener elementos
+        const imageInput = document.getElementById('admin-bg-image');
+        const dynamicStyle = document.getElementById('dynamic-bg-style');
+
+
+        if (imageInput && dynamicStyle){
+
+            const savedImage = localStorage.getItem('adminBgImage');
+            if (savedImage) {
+                imageInput.value = savedImage;
+                updateBackgroundImage(savedImage);
+            }
+
+            // Manejar cambio de URL de la imagen
+            imageInput.addEventListener('input', function() {
+                updateBackgroundImage(this.value);
+                localStorage.setItem('adminBgImage', this.value);
+            });
+
+            function updateBackgroundImage(imageUrl) {
+                dynamicStyle.textContent = `
+                    body, #content {
+                        background-image: url('${imageUrl}');
+                        background-size: cover;
+                        background-repeat: no-repeat;
+                        background-attachment: fixed;
+                        transition: background 2s ease;
+                    }
+                `;  
+            }
+        }    
+        // JS para el menú de hamburguesa
+        const hamburgerBtn = document.querySelector('.hamburger-menu');
+        const mainNav = document.querySelector('.main-nav');
+        
+        if (hamburgerBtn && mainNav) {
+            hamburgerBtn.addEventListener('click', () => {
+                mainNav.classList.toggle('active');
+            });
+        }
+    });
+    </script>
+    {% endblock %}

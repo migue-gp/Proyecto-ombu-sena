@@ -1,0 +1,154 @@
+{# admin_personalizado/templates/admin/index.html #}
+{% extends "admin/base_site.html" %}
+{% load static i18n %}
+
+{% block extrastyle %}
+    {{ block.super }}
+    {# Carga tu archivo CSS personalizado para el dashboard #}
+    <link rel="stylesheet" href="{% static 'admin_personalizado/css_panel/dashboard.css' %}">
+    <style id="dynamic-bg-style"></style>
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+{% block bodyclass %}{{ block.super }} dashboard{% endblock %}
+
+{% comment %} {% block nav-breadcrumbs %}
+    <nav aria-label="{% translate 'Breadcrumbs' %}">
+        <div class="breadcrumbs">
+            {# ESTO ES CLAVE: Hereda el contenido del bloque 'breadcrumbs' de la plantilla padre (base.html). #}
+            {# base.html ahora SOLO debería dar el '<a href="/admin/">Inicio</a>'. #}
+            {{ block.super }} 
+            
+            {# Luego, si hay un título específico para esta página y NO es un duplicado de "Inicio" o "Panel de Administración", lo agregamos. #}
+            {% if title and title != 'Panel de Administración' and title|lower != 'home'|lower and title|lower != 'inicio'|lower %}
+                &rsaquo; {{ title }}
+            {% endif %}
+        </div>
+    </nav>
+{% endblock %} {% endcomment %}
+
+{% block title %}{% translate 'Panel de Administración' %}{% endblock %}
+
+{% block content %}
+    <div id="content-main">
+        <div class="row-index">
+            <div class="dashboard-main-area">
+                <h4 class="dashboard-title">Bienvenido al Panel de Administracion</h4>
+                <p class="dashboard-intro-text">Aquí puedes ver un resumen de las operaciones administrativas recientes.</p>
+
+
+                {# ESTE ES EL CONTENEDOR PARA LAS ESTADÍSTICAS #}
+                <div class="dashboard-stats-container">
+                    <div class="stat-card">
+                        <h3>Cantidad de Productos</h3>
+                        <p>{{ cantidad_productos }}</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Cantidad de Usuarios</h3>
+                        <p>{{ cantidad_usuarios }}</p>
+                    </div>
+                </div>
+
+                
+                {# FIN DEL CONTENEDOR DE ESTADÍSTICAS #}
+                {# TU CÓDIGO DE PERSONALIZACIÓN DEL FONDO VA AQUÍ #}
+                {% comment %} <div class="module">
+                    <h2>{% translate 'Personalización del Fondo' %}</h2>
+                    <div class="form-row">
+                        <label for="admin-bg-image">{% translate 'URL de la Imagen de Fondo:' %}</label>
+                        <input type="text" id="admin-bg-image" name="admin-bg-image" placeholder="{% translate 'Ingrese la URL de la imagen' %}">
+                    </div>
+                </div> {% endcomment %}
+
+                {# AQUÍ ES DONDE RENDERIZAMOS LA LISTA DE APLICACIONES/MODELOS #}
+                {% if app_list %}
+                    <div class="app-dashboard"> {# Esta es la clase que Django usa por defecto #}
+                        {% comment %} {% for app in app_list %}
+                            <div class="app-{{ app.app_label }} module">
+                                <h2>{{ app.name }}</h2>
+                                <ul class="actionlist">
+                                    {% for model in app.models %}
+                                        <li class="{% if model.admin_url %}changelink{% else %}viewlink{% endif %}">
+                                            <a href="{{ model.admin_url }}">{{ model.name }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        {% endfor %} {% endcomment %}
+                    </div>
+                {% else %}
+                    <p>{% translate 'No se encontraron aplicaciones o modelos.' %}</p>
+                {% endif %}
+
+                {# Si quieres tus tarjetas de información, descomenta y úsalas aquí #}
+                {% comment %}
+                <div class="dashboard-info-card">
+                    <div class="dashboard-card-header">
+                        <h6>Información General</h6>
+                    </div>
+                    <div class="dashboard-card-body">
+                        <p>Utiliza la barra de navegación superior para gestionar Usuarios, Productos, Inventario, Mesas y Reservas.</p>
+                        <p>Las actividades que realices como administrador se mostrarán en la barra lateral "Actividad Reciente".</p>
+                    </div>
+                </div>
+                {% endcomment %}
+            </div>
+
+            <div class="dashboard-sidebar">
+                <div class="dashboard-recent-actions">
+                    <h5 class="dashboard-sidebar-title">Actividad Reciente</h5>
+                    <ul class="dashboard-actions-list">
+                        {% for actividad in actividades_recientes %}
+                        <li class="dashboard-action-item">
+                            <div class="dashboard-action-content">
+                                {{ actividad.accion|safe }}
+                                <span class="dashboard-action-timestamp">{{ actividad.fecha_hora|date:"d M H:i" }}</span>
+                            </div>
+                        </li>
+                        {% empty %}
+                        <li class="dashboard-action-item no-activities">
+                            <div class="dashboard-action-content">No hay actividades recientes.</div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extrajs %}
+    {{ block.super }}
+    {# Script para la personalización del fondo #}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const imageInput = document.getElementById('admin-bg-image');
+        const dynamicStyle = document.getElementById('dynamic-bg-style');
+
+        if (imageInput && dynamicStyle){
+            const savedImage = localStorage.getItem('adminBgImage');
+            if (savedImage) {
+                imageInput.value = savedImage;
+                updateBackgroundImage(savedImage);
+            }
+
+            imageInput.addEventListener('input', function() {
+                updateBackgroundImage(this.value);
+                localStorage.setItem('adminBgImage', this.value);
+            });
+
+            function updateBackgroundImage(imageUrl) {
+                dynamicStyle.textContent = `
+                    body, #content {
+                        background-image: url('${imageUrl}');
+                        background-size: cover;
+                        background-repeat: no-repeat;
+                        background-attachment: fixed;
+                        transition: background 2s ease;
+                    }
+                `;
+            }
+        }
+    });
+    </script>
+{% endblock %}

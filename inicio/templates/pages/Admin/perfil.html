@@ -1,0 +1,10 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+  <div class="content">
+    <h1>Mi Perfil</h1>
+    <p><strong>Nombre de usuario:</strong> {{ usuario.username }}</p>
+    <p><strong>Nombre completo:</strong> {{ usuario.get_full_name }}</p>
+    <p><strong>Email:</strong> {{ usuario.email }}</p>
+  </div>
+{% endblock %}

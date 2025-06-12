@@ -1,0 +1,236 @@
+{% comment %} base.html {% endcomment %}
+
+{% load i18n static %}<!DOCTYPE html>
+{% get_current_language as LANGUAGE_CODE %}{% get_current_language_bidi as LANGUAGE_BIDI %}
+<html lang="{{ LANGUAGE_CODE|default:"en-us" }}" dir="{{ LANGUAGE_BIDI|yesno:'rtl,ltr,auto' }}">
+<head>
+<title>{% block title %}{% endblock %}</title>
+<link rel="stylesheet" href="{% block stylesheet %}{% static "admin/css/base.css" %}{% endblock %}">
+{% block dark-mode-vars %}
+  <link rel="stylesheet" href="{% static "admin/css/dark_mode.css" %}">
+  <script src="{% static "admin/js/theme.js" %}"></script>
+{% endblock %}
+{% if not is_popup and is_nav_sidebar_enabled %}
+  <link rel="stylesheet" href="{% static "admin/css/nav_sidebar.css" %}">
+  <script src="{% static 'admin/js/nav_sidebar.js' %}" defer></script>
+{% endif %}
+{% block extrastyle %}
+{{ block.super }}
+{% comment %} <link rel="stylesheet" href="{% static 'admin_personalizado/sidebar.css' %}">    referencia del css {% endcomment %}
+<link rel="stylesheet" href="{% static 'admin_personalizado/css_panel/barraside.css' %}">
+<link rel="stylesheet" href="{% static 'admin_personalizado/css_panel/menu_despleg.css' %}">
+{% endblock %}
+{% if LANGUAGE_BIDI %}<link rel="stylesheet" href="{% block stylesheet_rtl %}{% static "admin/css/rtl.css" %}{% endblock %}">{% endif %}
+{% block extrahead %}{% endblock %}
+{% block responsive %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static "admin/css/responsive.css" %}">
+    {% if LANGUAGE_BIDI %}<link rel="stylesheet" href="{% static "admin/css/responsive_rtl.css" %}">{% endif %}
+{% endblock %}
+{% block blockbots %}<meta name="robots" content="NONE,NOARCHIVE">{% endblock %}
+</head>
+
+<body class="{% if is_popup %}popup {% endif %}{% block bodyclass %}{% endblock %}"
+  data-admin-utc-offset="{% now "Z" %}">
+<a href="#content-start" class="skip-to-content-link">{% translate 'Skip to main content' %}</a>
+<div id="container">
+
+    {% if not is_popup %}
+    {% block header %}
+      <header id="header">
+        <div id="branding">
+        {% block branding %}{% endblock %}
+        </div>
+        {% block usertools %}
+        {% if has_permission %}
+          <div id="user-tools">
+              <div class="user-menu-container">
+                  <button class="user-menu-toggle">
+                      <span class="name_admin-span" style="display: flex; align-items: center; color:rgb(255, 255, 255); font-size: 20px; ">
+                          <span>Administrador, {% firstof user.get_short_name user.get_username %}</span>
+                          {% if request.user.is_authenticated and request.user.perfil and request.user.perfil.avatar %}
+                              <img src="{{ request.user.perfil.avatar.url }}"
+                                    alt="Avatar"
+                                    style="height:50px; width:50px; border-radius:50%; margin-left:5px; vertical-align:middle;">
+                          {% else %}
+                              <img src="{% static 'admin_personalizado/user_icon.png' %}" alt="{% firstof user.get_short_name user.get_username %}"
+                                    style="height: 30px; width: 30px; border-radius: 50%; margin-left: 5px; vertical-align: middle;">
+                          {% endif %}
+                      </span>
+                  </button>
+                  <ul class="user-menu">
+                      <li><a href="{% url 'admin_panel:perfil' %}">{% translate 'Ver perfil' %}</a></li>
+                      {% comment %} {# Este es el nuevo enlace para el Dashboard #}
+                      <li><a href="{% url 'admin:inicio_dashboard' %}">Dashboard</a></li>  {% endcomment %}
+                      {% if site_url %}
+                          <li><a href="{{ site_url }}">{% translate 'Ver sitio web' %}</a></li>
+                      {% endif %}
+                      {% if user.is_active and user.is_staff %}
+                          {% url 'django-admindocs-docroot' as docsroot %}
+                          {% if docsroot %}
+                              <li><a href="{{ docsroot }}">{% translate 'Documentacion' %}</a></li>
+                          {% endif %}
+                      {% endif %}
+                      <li>
+                          <a href="{% static 'manual de usuario.pdf' %}" target="_blank">
+                              Descargar manual PDF
+                          </a>
+                      {% if user.has_usable_password %}
+                          <li><a href="{% url 'admin:password_change' %}">{% translate 'Cambiar contraseña' %}</a></li>
+                      {% endif %}
+                      <li>
+                        <a href="{% url 'admin_panel:lista_backups' %}">
+                          <i class="fas fa-database"></i> Respaldar base de datos
+                        </a>
+                      </li>
+                      <li>
+                          <form id="logout-form" method="post" action="{% url 'admin:logout' %}">
+                              {% csrf_token %}
+                              <button type="submit">{% translate 'Cerrar sesion' %}</button>
+                          </form>
+                      </li>
+                  </ul>
+              </div>
+              {% comment %} {% include "admin/color_theme_toggle.html" %} {% endcomment %}
+          </div>
+        {% endif %}
+        {% endblock %}
+
+        {# AQUI ES DONDE INSERTAS EL BLOQUE DE NAVEGACIÓN #}
+        {% comment %} {% block nav-global %}
+        <nav class="main-nav">
+            <ul>
+                {# Los enlaces del panel de administración apuntan a la app 'inicio' #}
+                <li><a href="{% url 'inicio:dashboard' %}">Dashboard</a></li>
+                <li><a href="{% url 'inicio:listar_usuarios' %}">Usuarios</a></li>
+                <li><a href="{% url 'inicio:listar_productos' %}">Productos</a></li>
+                <li><a href="{% url 'inicio:inventario' %}">Inventario</a></li>
+                <li><a href="{% url 'inicio:mesas' %}">Mesas</a></li>
+                <li><a href="{% url 'inicio:listar_reservas' %}">Reservas</a></li>
+            </ul>
+        </nav>
+        {% endblock %} {% endcomment %}
+        {# FIN DEL BLOQUE DE NAVEGACIÓN #}
+
+      </header>
+    {% endblock %}
+
+{% block nav-breadcrumbs %}
+<nav aria-label="{% translate 'Migas de pan' %}">
+    <div class="breadcrumbs">
+        <a href="{% url 'admin:index' %}">{% translate 'Inicio' %}</a>
+        
+        {# Debugging (para que veamos los valores si sigue habiendo problemas) #}
+        {# Si estamos en una página de modelo (opts está disponible) #}
+        {% if opts %}
+            {# Enlace a la lista de aplicaciones (ej. "Usuarios") si la app no es 'inicio' #}
+            {% if app_label and app_label|lower != 'inicio'|lower and app_label|lower != 'home'|lower %}
+                {% with app_list_view_name='admin:app_list' %}
+                    &rsaquo; <a href="{% url app_list_view_name app_label=opts.app_label %}">{{ app_label|capfirst }}</a>
+                {% endwith %}
+            {% endif %}
+
+            {# Enlace a la lista de cambios del modelo (ej. "Pedidos") #}
+            {% if opts.verbose_name_plural %}
+                {% with changelist_view_name='admin:'|add:opts.app_label|add:'_'|add:opts.model_name|add:'_changelist' %}
+                    &rsaquo; <a href="{% url changelist_view_name %}">{{ opts.verbose_name_plural|capfirst }}</a>
+                {% endwith %}
+            {% endif %}
+        {% endif %}
+
+        {# Título de la página actual (ej. "Añadir pedido", "Seleccionar pedido") #}
+        {# Solo se muestra si el título no es igual al nombre plural del modelo ni al nombre de la app (para evitar duplicados) #}
+        {% if title and title|lower != opts.verbose_name_plural|lower and title|lower != app_label|lower and title|lower != 'panel de administración'|lower and title|lower != 'home'|lower and title|lower != 'inicio'|lower %}
+            &rsaquo; {{ title }}
+        {% endif %}
+    </div>
+</nav>
+{% endblock %}
+
+
+    {% endif %}
+
+    <div class="main shifted" id="main">
+      {% comment %} {% if not is_popup and is_nav_sidebar_enabled %}
+        {% block nav-sidebar %}
+          <div class="custom-sidebar">
+            {% include "admin/recent_sidebar.html" %}
+          </div>
+        {% endblock %}
+      {% endif %} {% endcomment %}
+      <main id="content-start" class="content" tabindex="-1">
+        {% block messages %}
+          {% if messages %}
+            <ul class="messagelist">{% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message|capfirst }}</li>
+            {% endfor %}</ul>
+          {% endif %}
+        {% endblock messages %}
+        <div id="content" class="{% block coltype %}colM{% endblock %}">
+          {% block pretitle %}{% endblock %}
+          {% block content_title %}{% if title %}<h1>{{ title }}</h1>{% endif %}{% endblock %}
+          {% comment %} {% block object-tools %}{% endcomment %}
+          {% block content_subtitle %}{% if subtitle %}<h2>{{ subtitle }}</h2>{% endif %}{% endblock %}
+          {% block content %}
+            {{ content }}
+          {% endblock %}
+          {% block sidebar %}{% endblock %}
+          <br class="clear">
+        </div>
+        </main>
+    </div>
+    <footer id="footer">{% block footer %}{% endblock %}</footer>
+</div>
+<svg xmlns="http://www.w3.org/2000/svg" class="base-svgs">
+  <symbol viewBox="0 0 24 24" width="1.5rem" height="1.5rem" id="icon-auto"><path d="M0 0h24v24H0z" fill="currentColor"/><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm0-2V4a8 8 0 1 0 0 16z"/></symbol>
+  <symbol viewBox="0 0 24 24" width="1.5rem" height="1.5rem" id="icon-moon"><path d="M0 0h24v24H0z" fill="currentColor"/><path d="M10 7a7 7 0 0 0 12 4.9v.1c0 5.523-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2h.1A6.979 6.979 0 0 0 10 7zm-6 5a8 8 0 0 0 15.062 3.762A9 9 0 0 1 8.238 4.938 7.999 7.999 0 0 0 4 12z"/></symbol>
+  <symbol viewBox="0 0 24 24" width="1.5rem" height="1.5rem" id="icon-sun"><path d="M0 0h24v24H0z" fill="currentColor"/><path d="M12 18a6 6 0 1 1 0-12 6 6 0 0 1 0 12zm0-2a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM11 1h2v3h-2V1zm0 19h2v3h-2v-3zM3.515 4.929l1.414-1.414L7.05 5.636 5.636 7.05 3.515 4.93zM16.95 18.364l1.414-1.414 2.121 2.121-1.414 1.414-2.121-2.121zm2.121-14.85l1.414 1.415-2.121 2.121-1.414-1.414 2.121-2.121zM5.636 16.95l1.414 1.414-2.121 2.121-1.414-1.414 2.121-2.121zM23 11v2h-3v-2h3zM4 11v2H1v-2h3z"/></symbol>
+</svg>
+{% block extrabody %}{% endblock extrabody %}
+
+{% block extrajs %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function adjustSidebar() {
+        const header = document.getElementById('header');
+        const breadcrumbs = document.querySelector('.breadcrumbs');
+        const sidebar = document.querySelector('.custom-sidebar');
+        
+        if (header && breadcrumbs && sidebar) {
+            // Calcula alturas exactas
+            const headerHeight = header.offsetHeight;
+            const breadcrumbsHeight = breadcrumbs.offsetHeight;
+            const totalHeight = headerHeight + breadcrumbsHeight;
+            
+            // Aplica estilos con margen de seguridad
+            sidebar.style.top = totalHeight + 'px';
+            sidebar.style.height = `calc(100vh - ${totalHeight + 10}px)`; // +10px de margen
+            sidebar.style.zIndex = '900';  // Menor que header (1000)
+            
+            // Asegura que el contenido principal no se solape
+            document.getElementById('main').style.paddingLeft = '300px';
+        }
+    }
+    
+    // Ejecutar al cargar y al redimensionar
+    adjustSidebar();
+    window.addEventListener('resize', adjustSidebar);
+    
+    // Opcional: Botón toggle para móviles
+    //if (window.innerWidth <= 1024) {
+    //    const toggleBtn = document.createElement('button');
+    //    toggleBtn.className = 'sidebar-toggle';
+    //    toggleBtn.innerHTML = '☰ Actividades';
+    //    document.querySelector('#branding').prepend(toggleBtn);
+    //    
+    //    toggleBtn.addEventListener('click', function() {
+    //        document.querySelector('.custom-sidebar').classList.toggle('active');
+    //    });
+    //}
+});
+</script> 
+{{ block.super }}
+<script src="{% static 'admin_personalizado/js_panel/menu_despleg.js' %}"></script>
+{% endblock %}
+</body>
+</html>
