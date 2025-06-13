@@ -157,9 +157,37 @@ class Pedido(models.Model):
         
 
 
+# class PedidoDetalle(models.Model):
+#     pedido = models.ForeignKey(Pedido, related_name='detalles', on_delete=models.CASCADE)
+#     producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+#     cantidad = models.PositiveIntegerField()
+#     precio_unitario = models.DecimalField(max_digits=8, decimal_places=2)
+    
+#     @property
+#     def subtotal(self):
+#         return self.cantidad * self.precio_unitario
+    
+#     def __str__(self):
+#         return f"{self.cantidad} x {self.producto.titulo} para Pedido #{self.pedido.id}"
+
+#     class Meta:
+#         verbose_name = "Detalle de Pedido"
+#         verbose_name_plural = "Detalles de Pedidos"
+#         unique_together = ('pedido', 'producto')
+
+# # ---------------------------------------------------------------------------------------------------
+
 class PedidoDetalle(models.Model):
     pedido = models.ForeignKey(Pedido, related_name='detalles', on_delete=models.CASCADE)
-    producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    # producto = models.ForeignKey(Producto, on_delete=models.CASCADE)
+    
+    ##########
+    producto = models.ForeignKey(Producto, on_delete=models.SET_NULL, null=True, blank=True)
+     # SOLO NECESITAMOS ESTE CAMPO para el nombre histórico,
+    # ya que 'precio_unitario' ya te sirve para el precio de la venta.
+    #####################
+    nombre_producto_historico = models.CharField(max_length=255, null=True, blank=True)
+    
     cantidad = models.PositiveIntegerField()
     precio_unitario = models.DecimalField(max_digits=8, decimal_places=2)
     
@@ -167,17 +195,27 @@ class PedidoDetalle(models.Model):
     def subtotal(self):
         return self.cantidad * self.precio_unitario
     
+    #######################################
+    # Sobreescribir el método save para guardar la instantánea
+    def save(self, *args, **kwargs):
+        # Si el producto existe y aún no hemos guardado la instantánea del nombre
+        if self.producto and not self.pk: # 'not self.pk' significa que es un nuevo objeto
+            self.nombre_producto_historico = self.producto.titulo
+            # Ya que 'precio_unitario' en PedidoDetalle parece que ya guarda el precio de la venta,
+            # no necesitamos un 'precio_unitario_historico' adicional.
+            # Solo asegúrate de que cuando crees el PedidoDetalle, el precio_unitario se tome del Producto actual.
+
+        super().save(*args, **kwargs) # Llama al método save original
+    
     def __str__(self):
         return f"{self.cantidad} x {self.producto.titulo} para Pedido #{self.pedido.id}"
 
     class Meta:
         verbose_name = "Detalle de Pedido"
         verbose_name_plural = "Detalles de Pedidos"
-        unique_together = ('pedido', 'producto')
+        #unique_together = ('pedido', 'producto')
 
 # ---------------------------------------------------------------------------------------------------
-
-
 
 
 
