@@ -153,6 +153,8 @@ class Pedido(models.Model):
         verbose_name = "Pedido"
         verbose_name_plural = "Pedidos"
         ordering = ['-fecha']
+        ...
+        
 
 
 class PedidoDetalle(models.Model):
@@ -174,7 +176,6 @@ class PedidoDetalle(models.Model):
         unique_together = ('pedido', 'producto')
 
 # ---------------------------------------------------------------------------------------------------
-
 
 
 
