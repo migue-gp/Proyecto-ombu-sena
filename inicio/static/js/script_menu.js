@@ -57,27 +57,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const cartIconContainer = document.querySelector('.cart-icon-container');
 
+    // MODIFICACIÓN CLAVE EN updateModalAvailableQuantity
     function updateModalAvailableQuantity() {
         console.log("updateModalAvailableQuantity called");
-        if (currentProductData.card && modalAvailableQuantity) {
-            const quantity = parseInt(currentProductData.card.dataset.cantidadDisponibleActual);
-            console.log("Modal Product ID:", currentProductData.card.dataset.id);
-            console.log("Modal Current available quantity (from dataset.cantidadDisponibleActual):", quantity);
+        if (currentProductData.card && modalAvailableQuantity && modalAddToCartBtn) {
+            const initialBackendQuantity = parseInt(currentProductData.card.dataset.cantidadDisponible);
+            const productId = currentProductData.card.dataset.id;
+            
+            const itemInCart = cart.find(item => item.id == productId && (item.option === 'Regular' || !item.option));
+            const quantityInCart = itemInCart ? itemInCart.quantity : 0;
+
+            const remainingQuantity = initialBackendQuantity - quantityInCart;
+            currentProductData.card.dataset.cantidadDisponibleActual = remainingQuantity; 
+
+            console.log(`Modal Product ID: ${productId}, Initial Backend Quantity: ${initialBackendQuantity}, In Cart: ${quantityInCart}, Remaining for purchase: ${remainingQuantity}`);
 
             let textToDisplay;
-            if (quantity > 0) {
-                textToDisplay = `Cantidad disponible: ${quantity}`;
+            if (remainingQuantity > 0) {
+                textToDisplay = `Cantidad disponible: ${remainingQuantity}`;
                 modalAddToCartBtn.disabled = false;
+                modalAddToCartBtn.textContent = 'Agregar al carrito';
+                modalAddToCartBtn.classList.remove('product-disabled-btn');
+                modalAddToCartBtn.classList.add('button');
+                modalAvailableQuantity.removeAttribute('data-status'); // Quita el atributo
             } else {
-                textToDisplay = `No hay unidades disponibles.`;
+                textToDisplay = `No hay unidades disponibles.`; // Mensaje definitivo
                 modalAddToCartBtn.disabled = true;
+                modalAddToCartBtn.textContent = 'No disponible'; // Texto del botón
+                modalAddToCartBtn.classList.add('product-disabled-btn');
+                modalAddToCartBtn.classList.remove('button');
+                modalAvailableQuantity.setAttribute('data-status', 'unavailable'); // Añade el atributo
             }
             modalAvailableQuantity.textContent = textToDisplay;
             console.log("Text applied to modal-available-quantity:", textToDisplay);
         } else {
-            console.log("updateModalAvailableQuantity: currentProductData.card or modalAvailableQuantity is null/undefined.");
+            console.log("updateModalAvailableQuantity: currentProductData.card, modalAvailableQuantity, or modalAddToCartBtn is null/undefined.");
             if (!currentProductData.card) console.log("currentProductData.card is null/undefined.");
             if (!modalAvailableQuantity) console.log("modalAvailableQuantity is null/undefined.");
+            if (!modalAddToCartBtn) console.log("modalAddToCartBtn is null/undefined.");
         }
     }
 
@@ -134,8 +151,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const itemInCart = cart.find(item => item.id == productId && (item.option === 'Regular' || !item.option)); 
         const quantityInCart = itemInCart ? itemInCart.quantity : 0;
     
+        // Calcula la cantidad restante para mostrar en la tarjeta y para la lógica de habilitar/deshabilitar
         const remainingQuantity = initialAvailableQuantityFromBackend - quantityInCart;
-        card.dataset.cantidadDisponibleActual = remainingQuantity; 
+        card.dataset.cantidadDisponibleActual = remainingQuantity; // Actualiza este dataset para el modal y otras funciones
         console.log(`Card ${productId} updated: initial=${initialAvailableQuantityFromBackend}, inCart=${quantityInCart}, remaining=${remainingQuantity}`);
     
         if (quantitySpan) {
@@ -150,7 +168,8 @@ document.addEventListener("DOMContentLoaded", () => {
     
         if (!addButton) return;
     
-        if (remainingQuantity <= 0) { 
+        // La condición para deshabilitar el botón: si la cantidad en el carrito ya es igual o mayor al STOCK INICIAL
+        if (quantityInCart >= initialAvailableQuantityFromBackend) { // <--- CAMBIO CLAVE AQUÍ
             addButton.innerHTML = 'No disponible';
             addButton.disabled = true;
             addButton.classList.add('product-disabled-btn');
@@ -177,19 +196,29 @@ document.addEventListener("DOMContentLoaded", () => {
             const title = card.querySelector('.main-card > span').textContent;
             const priceElement = card.querySelector('.footer-card > span');
             const price = parseFloat(priceElement.textContent.replace(/[^0-9.-]+/g, '')) || 0;
-            const currentAvailableQuantity = parseInt(card.dataset.cantidadDisponibleActual); 
+            
+            // Cantidad inicial disponible del backend (stock total)
+            const initialBackendQuantity = parseInt(card.dataset.cantidadDisponible); // <--- OBTENER ESTE VALOR
+
+            console.log("--- Intento de agregar desde tarjeta ---");
+            console.log("Product ID:", productId);
+            console.log("Cantidad disponible inicial (dataset.cantidadDisponible):", initialBackendQuantity);
 
             const existingItemIndex = cart.findIndex(item => item.id == productId && item.option === 'Regular'); 
             const currentQuantityInCart = existingItemIndex !== -1 ? cart[existingItemIndex].quantity : 0;
+            console.log("Cantidad actual en el carrito para este producto:", currentQuantityInCart);
 
-            if (currentQuantityInCart >= currentAvailableQuantity) { 
+            // <--- CAMBIO CLAVE AQUÍ: La condición para permitir añadir
+            if (currentQuantityInCart >= initialBackendQuantity) { // Comparar con el stock total del backend
+                console.warn("ALERTA: Cantidad en carrito (" + currentQuantityInCart + ") ya es >= al stock total (" + initialBackendQuantity + ")");
                 alert('No hay más unidades disponibles de este producto.');
-                updateCardButtonState(card);
+                updateCardButtonState(card); // Asegura que el estado del botón se actualice si la alerta se muestra
                 return;
             }
 
             if (existingItemIndex !== -1) {
                 cart[existingItemIndex].quantity += 1;
+                console.log("Cantidad incrementada en carrito. Nueva cantidad:", cart[existingItemIndex].quantity);
             } else {
                 const cartItem = {
                     id: productId,
@@ -201,8 +230,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     option: 'Regular' 
                 };
                 cart.push(cartItem);
+                console.log("Producto agregado al carrito por primera vez.");
             }
             updateCartDisplay();
+            console.log("Estado del carrito después de agregar:", JSON.stringify(cart));
 
             if (modal.style.display === "flex" && currentProductData.card && currentProductData.card.dataset.id == productId) {
                 console.log("Updating modal quantity after '+' button click");
@@ -318,7 +349,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const title = modalTitle.textContent;
         const imgSrc = modalImage.src;
         const productId = currentProductData.card.dataset.id;
-        const currentAvailableQuantity = parseInt(currentProductData.card.dataset.cantidadDisponibleActual); 
+        
+        // Cantidad inicial disponible del backend (stock total)
+        const initialBackendQuantity = parseInt(currentProductData.card.dataset.cantidadDisponible); // <--- OBTENER ESTE VALOR
+        
+        console.log("--- Intento de agregar desde modal ---");
+        console.log("Product ID:", productId);
+        console.log("Cantidad disponible inicial (dataset.cantidadDisponible):", initialBackendQuantity);
 
         let option = 'Regular';
         if (modalSelect && modalSelect.value) {
@@ -330,14 +367,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const existingItemIndex = cart.findIndex(item => item.id == productId && item.option === option);
         const currentQuantityInCart = existingItemIndex !== -1 ? cart[existingItemIndex].quantity : 0;
+        console.log("Cantidad actual en el carrito para este producto (modal):", currentQuantityInCart);
 
-        if (currentQuantityInCart >= currentAvailableQuantity) { 
+        // <--- CAMBIO CLAVE AQUÍ: La condición para permitir añadir
+        if (currentQuantityInCart >= initialBackendQuantity) { // Comparar con el stock total del backend
+            console.warn("ALERTA (modal): Cantidad en carrito (" + currentQuantityInCart + ") ya es >= al stock total (" + initialBackendQuantity + ")");
             alert('No hay más unidades disponibles de este producto.');
             return;
         }
 
         if (existingItemIndex !== -1) {
             cart[existingItemIndex].quantity += 1;
+            console.log("Cantidad incrementada en carrito (modal). Nueva cantidad:", cart[existingItemIndex].quantity);
         } else {
             const cartItem = {
                 id: productId,
@@ -349,10 +390,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 option
             };
             cart.push(cartItem);
+            console.log("Producto agregado al carrito por primera vez (modal).");
         }
 
         updateCartDisplay();
         modal.style.display = 'none'; 
+        console.log("Estado del carrito después de agregar (modal):", JSON.stringify(cart));
 
         cartCount.style.transform = 'scale(1.3)';
         setTimeout(() => {
@@ -368,7 +411,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // === Finalizar compra ===
-    // *** SECCIÓN MODIFICADA: Eliminado el prompt de medio de pago ***
     checkoutButton.addEventListener('click', async function() {
         if (cart.length === 0) {
             alert('Su carrito está vacío');
@@ -382,8 +424,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const totalCarrito = cart.reduce((sum, item) => sum + item.quantity * item.price, 0);
 
-        // --- PREPARAR DATOS PARA ENVIAR AL SERVIDOR ---
-        // ¡IMPORTANTE! Si tu backend espera un `medio_pago` y no lo proporcionas aquí,
         const orderData = {
             mesa_id: mesaIdActiva,
             mesa_numero: mesaNumeroActivo, 
@@ -419,8 +459,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 result.updated_stock.forEach(stockUpdate => {
                     const cardElement = document.querySelector(`.card[data-id="${stockUpdate.product_id}"]`);
                     if (cardElement) {
+                        // ACTUALIZA el dataset.cantidadDisponible con el nuevo stock real del backend
                         cardElement.dataset.cantidadDisponible = stockUpdate.new_available_quantity;
-                        updateCardButtonState(cardElement); 
+                        updateCardButtonState(cardElement); // Vuelve a calcular y actualizar el UI
                     }
                 });
             }
@@ -496,7 +537,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="cart-item-details">
                     <div class="cart-item-title">${item.title}</div>
                     <div class="cart-item-option">${item.option}</div>
-                    <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+                    <div class="cart-item-price">$${item.price.toFixed(3)}</div>
 
                     <div class="cart-item-controls">
                         <div class="cart-item-quantity-control">
@@ -512,7 +553,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-        cartTotalAmount.textContent = `$${total.toFixed(2)}`;
+        cartTotalAmount.textContent = `$${total.toFixed(3)}`;
 
         updateCartStorage();
 
@@ -532,10 +573,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 const item = cart.find(i => i.id == id && i.option === option);
                 if (item) {
                     const card = document.querySelector(`.card[data-id="${id}"]`);
-                    const backendAvailable = parseInt(card.dataset.cantidadDisponible); // Stock real del backend
-                    if (item.quantity < backendAvailable) {
+                    // <--- CAMBIO CLAVE AQUÍ: Usar initialBackendQuantity (stock total)
+                    const initialBackendQuantity = parseInt(card.dataset.cantidadDisponible); 
+                    
+                    console.log("--- Intento de aumentar desde carrito ---");
+                    console.log("Product ID:", id);
+                    console.log("Cantidad actual en carrito:", item.quantity);
+                    console.log("Stock total disponible:", initialBackendQuantity);
+
+                    if (item.quantity < initialBackendQuantity) { // Comparar con el stock total
                         item.quantity += 1;
+                        console.log("Cantidad aumentada. Nueva cantidad en carrito:", item.quantity);
                     } else {
+                        console.warn("ALERTA: Cantidad en carrito (" + item.quantity + ") ya es >= al stock total (" + initialBackendQuantity + ")");
                         alert('No hay más unidades disponibles de este producto.');
                     }
                     updateCartDisplay();

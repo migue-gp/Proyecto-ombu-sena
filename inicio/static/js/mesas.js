@@ -119,9 +119,9 @@ mesas.forEach(mesa => {
             row.setAttribute('data-producto-id', producto.id);  // <-- añade el id
             row.innerHTML = `
                 <td>${producto.title}</td>
-                <td>$${producto.price.toFixed(2)}</td>
+                <td>$${producto.price.toFixed(3)}</td>
                 <td><input class="cantidad-input" type="number" value="${producto.quantity}" min="1" /></td>
-                <td>$${(producto.price * producto.quantity).toFixed(2)}</td>
+                <td>$${(producto.price * producto.quantity).toFixed(3)}</td>
                 <td><button onclick="eliminarProducto('${mesaId}', ${index})">Eliminar</button></td>
             `;
 
@@ -134,7 +134,7 @@ mesas.forEach(mesa => {
     }
 
     // Actualizar el total del pedido
-    document.getElementById('total-pedido').textContent = `$${total.toFixed(2)}`;
+    document.getElementById('total-pedido').textContent = `${total.toFixed(3)}`;
     document.getElementById('cantidad-total-pedido').textContent = cantidadTotalProductos; // Mostrar la cantidad total
 }
 
