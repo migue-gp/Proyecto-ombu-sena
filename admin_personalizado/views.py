@@ -60,7 +60,7 @@ DB_USER = 'ombu'
 os.makedirs(BACKUP_DIR, exist_ok=True)
 
 def crear_backup(request):
-    timestamp = timezone.now().strftime('%Y%m%d_%H%M%S')
+    timestamp = timezone.now().strftime('%Y-%m-%d_%H-%M-%S')
     filename = f"backup_{timestamp}.sql"
     filepath = os.path.join(BACKUP_DIR, filename)
 
@@ -81,10 +81,35 @@ def restaurar_backup(request, nombre):
     filepath = os.path.join(BACKUP_DIR, nombre)
 
     if not nombre.endswith('.sql') or not os.path.exists(filepath):
-        messages.error(request, "Archivo de backup no válido.")
+        messages.error(request, "Archivo de backup no válido o no encontrado.")
         return redirect('admin_panel:lista_backups')
 
     try:
+        # Desconectar usuarios de la base de datos (opcional, pero útil para evitar bloqueos)
+        # comando_disconnect = f"""
+        # SELECT pg_terminate_backend(pg_stat_activity.pid)
+        # FROM pg_stat_activity
+        # WHERE pg_stat_activity.datname = '{DB_NAME}'
+        #   AND pid <> pg_backend_pid();
+        # """
+        # subprocess.run([
+        #     'docker', 'exec', '-i', POSTGRES_CONTAINER,
+        #     'psql', '-U', DB_USER, '-d', 'postgres' # Conéctate a la base de datos 'postgres' para manipular la DB objetivo
+        # ], input=comando_disconnect.encode(), check=True)
+
+        # Eliminar la base de datos
+        subprocess.run([
+            'docker', 'exec', POSTGRES_CONTAINER,
+            'dropdb', '-U', DB_USER, DB_NAME
+        ], check=True, capture_output=True, text=True) # Añade capture_output y text para depuración
+
+        # Crear la base de datos
+        subprocess.run([
+            'docker', 'exec', POSTGRES_CONTAINER,
+            'createdb', '-U', DB_USER, DB_NAME
+        ], check=True, capture_output=True, text=True)
+
+        # Restaurar el backup
         with open(filepath, 'rb') as f:
             subprocess.run([
                 'docker', 'exec', '-i', POSTGRES_CONTAINER,
@@ -113,15 +138,21 @@ def restaurar_backup(request, nombre):
         END;
         $$;
         """
-
         subprocess.run([
             'docker', 'exec', '-i', POSTGRES_CONTAINER,
             'psql', '-U', DB_USER, '-d', DB_NAME
         ], input=comando_reset.encode(), check=True)
-
-        messages.success(request, f"Backup restaurado: {nombre}")
+        messages.success(request, f"Backup restaurado completamente: {nombre}")
+    
+    except subprocess.CalledProcessError as e:
+        # Captura errores específicos de subprocess.run
+        error_output = e.stderr if e.stderr else e.stdout # A veces el error está en stdout
+        messages.error(request, f"Error al ejecutar comando Docker/PostgreSQL: {error_output.strip()}")
+        messages.error(request, f"Código de salida: {e.returncode}")
+    except FileNotFoundError:
+        messages.error(request, "Comando 'docker' o 'pg_dump'/'psql' no encontrado. Asegúrate de que Docker y PostgreSQL estén instalados y en tu PATH.")
     except Exception as e:
-        messages.error(request, f"Error al restaurar backup: {str(e)}")
+        messages.error(request, f"Error inesperado al restaurar backup: {str(e)}")
     
     return redirect('admin_panel:lista_backups')
 

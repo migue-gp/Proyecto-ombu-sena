@@ -2,7 +2,7 @@ from django.contrib import admin, messages
 from .models import Pedido, Usuario, Producto, Mesa, GaleriaFoto, ConfiguracionGeneral, ActividadReciente
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 # from .models import Rol, Categoria, Usuario, Producto, Mesa, Pedido, Reserva
-from .forms import CustomUserCreationForm, CustomUserChangeForm
+from .forms import CustomUserCreationForm, CustomUserChangeForm, ProductoAdminForm
 from django.contrib.admin.utils import flatten_fieldsets
 from django.utils.html import format_html
 from django.urls import reverse, path
@@ -218,9 +218,6 @@ class UsuarioAdmin(BaseUserAdmin):
         
         non_deletable_pks = set()
         
-        # Comprobar si al menos un administrador activo (no superusuario) permanecerá
-        # si se eliminan los administradores seleccionados.
-        # Obtener todos los administradores activos que NO están en el queryset actual.
         remaining_active_admins = Usuario.objects.filter(
             rol='administrador', is_active=True, is_superuser=False
         ).exclude(pk__in=queryset.values_list('pk', flat=True))
@@ -238,7 +235,6 @@ class UsuarioAdmin(BaseUserAdmin):
             if user_to_delete.pk == request.user.pk:
                 non_deletable_pks.add(user_to_delete.pk)
         
-        # Filtrar el queryset original para obtener solo los que SÍ se pueden eliminar
         deletable_queryset = queryset.exclude(pk__in=list(non_deletable_pks))
         
         non_deletable_count = queryset.count() - deletable_queryset.count()
@@ -466,6 +462,8 @@ class UsuarioAdmin(BaseUserAdmin):
 # --- Clase ProductoAdmin ---
 @admin.register(Producto, site=custom_admin_site)
 class ProductoAdmin(admin.ModelAdmin):
+    form = ProductoAdminForm 
+     
     list_display = ('titulo', 'precio','cantidad_disponible', 'get_estado_display','get_categoria_display','acciones',)
     list_filter = ('estado', 'categoria',)
     search_fields = ('titulo', 'descripcion','categoria')
@@ -519,7 +517,6 @@ class ProductoAdmin(admin.ModelAdmin):
             'all': ('admin_personalizado/css_panel/agregar_forms.css','admin_personalizado/css_panel/acc_user.css')
         }
 
-    # --- SOBRESCRIBIR LA ACCIÓN 'delete_selected' ---
     def delete_selected(self, request, queryset):
         deleted_count, _ = queryset.delete()
         self.message_user(request, ngettext(
@@ -567,20 +564,14 @@ class ProductoAdmin(admin.ModelAdmin):
     
     
     def download_products_pdf_all(sefl, request,):
-                # Obtener todos los productos y agruparlos por categoría
-        # Asegúrate de que 'categoria' en tu modelo Producto es un campo.
-        # Si 'categoria' es un CharField con choices, el get_categoria_display() es útil.
         all_products = Producto.objects.all().order_by('categoria', 'titulo')
 
         # Agrupar productos por categoría
         products_by_category = defaultdict(list)
         for product in all_products:
-            # Usar get_categoria_display() para el nombre legible de la categoría
             category_name = product.get_categoria_display()
             products_by_category[category_name].append(product)
 
-        # Puedes convertir defaultdict a un listado de tuplas (nombre_categoria, lista_productos)
-        # y ordenarlas alfabéticamente por nombre de categoría si lo deseas.
         sorted_categories = sorted(products_by_category.items(), key=lambda item: item[0])
 
         context = {
@@ -600,8 +591,7 @@ class ProductoAdmin(admin.ModelAdmin):
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
-        # Asegúrate de que esta línea exista, si no la tienes, agrégala.
-        # Tu changelist_view ya la tenía, solo es para recordatorio.
+        
         extra_context['categorias'] = Producto.CATEGORIAS
 
         # URL para el botón de descarga global

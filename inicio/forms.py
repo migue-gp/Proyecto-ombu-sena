@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import Usuario
+from .models import Usuario, Producto
 from django.contrib.auth.forms import PasswordResetForm
 from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
@@ -60,3 +60,17 @@ class CustomPasswordResetForm(PasswordResetForm):
             html_email = render_to_string(html_email_template_name, context)
             email_message.attach_alternative(html_email, 'text/html')
         email_message.send()
+
+class ProductoAdminForm(forms.ModelForm):
+    class Meta:
+        model = Producto
+        fields = '__all__'
+
+    def clean_titulo(self):
+        titulo = self.cleaned_data['titulo']
+        titulo_lower = titulo.lower() 
+
+        if Producto.objects.filter(titulo__iexact=titulo_lower).exclude(pk=self.instance.pk).exists():
+            raise forms.ValidationError("Ya existe un producto con este título.")
+        
+        return titulo 
