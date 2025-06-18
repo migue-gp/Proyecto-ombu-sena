@@ -369,6 +369,134 @@ footer {
     z-index: 1;
 }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+/* Modificación aquí: Centrar el texto en las celdas de la tabla */
+table th,
+table td {
+    padding: 10px;
+    border: 1px solid white;
+    text-align: center; /* ¡Añadido o modificado para centrar! */
+}
+
+/* Estilo específico para la columna de Producto para que mantenga alineación izquierda */
+/* Esto es opcional, si quieres que la columna "Producto" siga alineada a la izquierda */
+table td:first-child,
+table th:first-child {
+    text-align: center;
+}
+
+/* Y si tienes una columna de acciones que también quieras mantener a la derecha */
+/* Esto es opcional, si quieres que la columna "Acciones" siga alineada a la derecha */
+table td:last-child,
+table th:last-child {
+    text-align: center;
+}
+
+/* Estilos para el input de cantidad dentro de la tabla */
+.pedido-section table .cantidad-input {
+    width: 60px; /* Ancho fijo, ajusta si es necesario */
+    padding: 8px 5px; /* Relleno para que no se vea apretado */
+    font-size: 1rem; /* Mismo tamaño de fuente que los botones */
+    border-radius: 5px; /* Bordes redondeados */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Borde claro para distinguirlo */
+    background-color: rgba(0, 0, 0, 0.4); /* Fondo semi-transparente oscuro */
+    color: white; /* Texto blanco */
+    text-align: center; /* Centrar el número */
+    -moz-appearance: textfield; /* Para Firefox, elimina las flechas */
+    appearance: textfield; /* Para otros navegadores, elimina las flechas */
+    transition: all 0.3s ease; /* Transición suave para el enfoque */
+}
+
+/* Eliminar las flechas de los inputs tipo number en Webkit (Chrome, Safari) */
+.pedido-section table .cantidad-input::-webkit-outer-spin-button,
+.pedido-section table .cantidad-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.pedido-section table .cantidad-input:focus {
+    outline: none; /* Quitar el contorno de enfoque predeterminado */
+    border-color: var(--accent-color); /* Color de acento al enfocar */
+    box-shadow: 0 0 5px rgba(78, 255, 55, 0.5); /* Sombra al enfocar */
+    background-color: rgba(0, 0, 0, 0.6); /* Un poco más oscuro al enfocar */
+}
+
+/* Estilo para los botones de la tabla (Eliminar) */
+/* Asegúrate de que el botón de eliminar también tenga un estilo consistente si aún no lo tiene */
+.pedido-section table button {
+    padding: 8px 12px;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    background-color: #dc3545; /* Color rojo */
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.pedido-section table button:hover {
+    background-color: #c82333; /* Rojo más oscuro al pasar el ratón */
+}
+
+/* Mejoras para los botones "Agregar Producto" y "Finalizar Pedido" */
+.pedido button,
+.pedido select {
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-top: 15px; /* Más espacio superior */
+    transition: all 0.3s ease;
+    font-weight: bold; /* Hacer el texto más legible */
+}
+
+#agregar-producto-btn {
+    background-color: var(--accent-color); /* Usar tu color de acento */
+    color: #1A3330; /* Color oscuro para el texto del botón */
+    border: 2px solid var(--accent-color); /* Borde para el efecto hover */
+}
+
+#agregar-producto-btn:hover {
+    background-color: #388e3c; /* Un verde un poco más oscuro o similar */
+    transform: translateY(-2px); /* Pequeño efecto 3D */
+    box-shadow: 0 4px 10px rgba(78, 255, 55, 0.4);
+}
+
+.finalizar-pedido-btn {
+    background-color: #007bff; /* Un color azul para finalizar, o tu color primario si prefieres */
+    color: white;
+    border: 2px solid #007bff;
+}
+
+.finalizar-pedido-btn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px rgba(0, 123, 255, 0.4);
+}
+
+.medio-pago {
+    background-color: rgba(0, 0, 0, 0.5); /* Fondo oscuro semitransparente */
+    color: white; /* Texto blanco */
+    border: 1px solid rgba(255, 255, 255, 0.3); /* Borde claro */
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    margin-right: 10px; /* Espacio a la derecha si hay otros elementos */
+    transition: all 0.3s ease;
+}
+
+.medio-pago:focus {
+    outline: none;
+    border-color: var(--accent-color);
+    box-shadow: 0 0 5px rgba(78, 255, 55, 0.5);
+}
+
 
 
 /*################################################################# MESAS FACTURA*/

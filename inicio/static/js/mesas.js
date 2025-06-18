@@ -101,12 +101,12 @@ mesas.forEach(mesa => {
 
 
 // Función para cargar el pedido del localStorage y actualizar la vista
- function cargarPedido(mesaId) {
-    const clavePedidoMesa = `pedido_mesa_${mesaId}`; // Clave única para cada mesa
+function cargarPedido(mesaId) {
+    const clavePedidoMesa = `pedido_mesa_${mesaId}`;
     const pedido = JSON.parse(localStorage.getItem(clavePedidoMesa)) || [];
 
     const tbody = document.getElementById('pedido-body');
-    tbody.innerHTML = ''; // Limpiar tabla antes de llenarla con los productos actuales
+    tbody.innerHTML = ''; 
     let total = 0;
     let cantidadTotalProductos = 0;
 
@@ -136,6 +136,19 @@ mesas.forEach(mesa => {
     // Actualizar el total del pedido
     document.getElementById('total-pedido').textContent = `${total.toFixed(3)}`;
     document.getElementById('cantidad-total-pedido').textContent = cantidadTotalProductos; // Mostrar la cantidad total
+}
+
+// Nueva función para actualizar cantidad desde la tabla
+function actualizarCantidadProducto(mesaId, index, nuevaCantidad) {
+    const clavePedidoMesa = `pedido_mesa_${mesaId}`;
+    const pedidoActual = JSON.parse(localStorage.getItem(clavePedidoMesa)) || [];
+    
+    const cantidad = parseInt(nuevaCantidad);
+    if (cantidad > 0 && index < pedidoActual.length) {
+        pedidoActual[index].quantity = cantidad;
+        localStorage.setItem(clavePedidoMesa, JSON.stringify(pedidoActual));
+        cargarPedido(mesaId); // Recargar para actualizar totales
+    }
 }
 
 
@@ -202,7 +215,7 @@ function eliminarPedido(mesaId) {
     cargarPedido(mesaId);
 }
 
-// funcion de finalizar pedido xdxd
+// funcion para finalziar el pedido
 function finalizarPedido(mesaId, medioPago) {
     const clavePedidoMesa = `pedido_mesa_${mesaId}`;
     const pedidoActual = JSON.parse(localStorage.getItem(clavePedidoMesa)) || [];
@@ -212,19 +225,14 @@ function finalizarPedido(mesaId, medioPago) {
         return;
     }
 
-    // Calcula el total del pedido
-    // *** CAMBIO AQUI: USAR item.quantity y item.price ***
     const totalPedido = pedidoActual.reduce((sum, item) => sum + (item.quantity * item.price), 0); 
 
-    // Recolectar solo los datos esenciales para la API
     const itemsParaEnviar = pedidoActual.map(item => ({
         producto_id: item.id,
-        // *** CAMBIO AQUI: USAR item.quantity y item.price ***
         cantidad: item.quantity, 
         precio_unitario: item.price 
     }));
 
-    // Datos a enviar al servidor
     const data = {
         mesa_id: mesaId,
         items: itemsParaEnviar,
@@ -242,6 +250,7 @@ function finalizarPedido(mesaId, medioPago) {
     })
     .then(response => {
         if (!response.ok) {
+            // Aquí es donde capturamos el mensaje de error específico del backend
             return response.json().then(errorData => {
                 throw new Error(errorData.error || 'Error desconocido al finalizar el pedido.');
             });
@@ -249,7 +258,8 @@ function finalizarPedido(mesaId, medioPago) {
         return response.json();
     })
     .then(data => {
-        alert(data.message);
+        // Si el pedido se finaliza con éxito
+        alert(data.message); // Muestra el mensaje de éxito del backend
         localStorage.removeItem(clavePedidoMesa);
         cargarPedido(mesaId);
         actualizarEstadoMesas();
@@ -261,11 +271,15 @@ function finalizarPedido(mesaId, medioPago) {
         localStorage.removeItem('mesaActivaNumero');
         mesaSeleccionadaText.textContent = '';
         document.querySelectorAll('.mesa').forEach(m => m.classList.remove('active'));
-
     })
     .catch(error => {
+        // Manejo de errores:
         console.error('Error al finalizar el pedido:', error);
-        alert('Error al finalizar el pedido: ' + error.message);
+        // Mostrar un mensaje más informativo al usuario
+        alert('Error al finalizar el pedido: ' + error.message); 
+        // Opcional: Podrías recargar el pedido para mostrar al mesero qué ítems causaron el problema
+        // e indicarle que ajuste el pedido manualmente si es posible.
+        // cargarPedido(mesaId);
     });
 }
 

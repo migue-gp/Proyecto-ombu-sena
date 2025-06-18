@@ -26,7 +26,7 @@ from collections import defaultdict
 @admin.register(Usuario, site=custom_admin_site)
 class UsuarioAdmin(BaseUserAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name', 'rol', 'is_active', 'date_joined', 'acciones')
-    list_filter = ('is_active', 'rol',) # Quita 'is_staff', 'is_superuser' si ya no son relevantes en la UI
+    list_filter = ('is_active', 'rol',)
     search_fields = ('username', 'email', 'first_name', 'last_name')
     ordering = ('username',)
 
@@ -35,27 +35,24 @@ class UsuarioAdmin(BaseUserAdmin):
 
     # Definir los fieldsets directamente sin los campos de permisos avanzados
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        ('Información Personal', {'fields': ('first_name', 'last_name', 'email', 'telefono', 'avatar')}),
-        ('Roles y Permisos', {'fields': ('rol', 'is_active')}), # Solo rol y is_active
-        ('Fechas Importantes', {'fields': ('last_login', 'date_joined')}),
+        (None, {'fields': ('username', 'password',)}),
+        ('Información Personal', {'fields': ('first_name', 'last_name', 'email')}),
+        ('Roles y Permisos', {'fields': ('rol', 'is_active')}),
+        ('Fechas Importantes', {'fields': ('date_joined',)}),
     )
-    readonly_fields = ('last_login', 'date_joined')
 
-    def get_add_fieldsets(self, request, obj=None):
-        # Para la vista de añadir, solo mostramos los campos relevantes
-        return (
-            (None, {
-                'classes': ('wide',),
-                'fields': ('username', 'email', 'first_name', 'last_name', 'rol', 'password', 'telefono', 'avatar'),
-            }),
-        )
+    add_fieldsets = (
+        (None, {'fields': ('username','password1','password2',)}),
+        ('Información Personal', {'fields': ('first_name', 'last_name', 'email')}),
+        ('Roles y Permisos', {'fields': ('rol',)}),
+    )
 
     def get_fieldsets(self, request, obj=None):
-        # Esta función ahora no necesita filtrar, porque los fieldsets ya no incluyen
-        # is_staff, is_superuser, groups, user_permissions.
-        # Simplemente devolvemos los fieldsets definidos en la clase.
-        return self.fieldsets
+        # Si es creación de usuario, usar add_fieldsets
+        if not obj:
+            return self.add_fieldsets
+        # Si es edición, usar fieldsets normales
+        return super().get_fieldsets(request, obj)
     
     def get_form(self, request, obj=None, **kwargs):
         form = super().get_form(request, obj, **kwargs)
@@ -218,6 +215,9 @@ class UsuarioAdmin(BaseUserAdmin):
         
         non_deletable_pks = set()
         
+        # Comprobar si al menos un administrador activo (no superusuario) permanecerá
+        # si se eliminan los administradores seleccionados.
+        # Obtener todos los administradores activos que NO están en el queryset actual.
         remaining_active_admins = Usuario.objects.filter(
             rol='administrador', is_active=True, is_superuser=False
         ).exclude(pk__in=queryset.values_list('pk', flat=True))
@@ -235,6 +235,7 @@ class UsuarioAdmin(BaseUserAdmin):
             if user_to_delete.pk == request.user.pk:
                 non_deletable_pks.add(user_to_delete.pk)
         
+        # Filtrar el queryset original para obtener solo los que SÍ se pueden eliminar
         deletable_queryset = queryset.exclude(pk__in=list(non_deletable_pks))
         
         non_deletable_count = queryset.count() - deletable_queryset.count()
@@ -462,14 +463,27 @@ class UsuarioAdmin(BaseUserAdmin):
 # --- Clase ProductoAdmin ---
 @admin.register(Producto, site=custom_admin_site)
 class ProductoAdmin(admin.ModelAdmin):
-    form = ProductoAdminForm 
-     
+    
+    form = ProductoAdminForm
+    
     list_display = ('titulo', 'precio','cantidad_disponible', 'get_estado_display','get_categoria_display','acciones',)
     list_filter = ('estado', 'categoria',)
     search_fields = ('titulo', 'descripcion','categoria')
     ordering = ('titulo',)
 
-    fields = ('titulo', 'descripcion', 'precio', 'cantidad_disponible', 'estado', 'foto', 'categoria', 'opciones')
+        # --- CAMBIO AQUÍ: Eliminamos 'fields' directo y usamos get_fields ---
+    # fields = ('titulo', 'descripcion', 'precio', 'cantidad_disponible', 'estado', 'foto', 'categoria', 'opciones')
+
+    def get_fields(self, request, obj=None):
+        """
+        Controla los campos mostrados en el formulario de agregar/editar.
+        El campo 'estado' solo se mostrará al editar un producto existente.
+        """
+        if obj: # Si el objeto existe (estamos editando)
+            return ('titulo', 'descripcion', 'precio', 'cantidad_disponible', 'estado', 'foto', 'categoria', 'opciones')
+        else: # Si el objeto no existe (estamos agregando uno nuevo)
+            return ('titulo', 'descripcion', 'precio', 'cantidad_disponible', 'foto', 'categoria', 'opciones')
+            # Hemos quitado 'estado' de esta lista
 
     def get_estado_display(self, obj):
         display_value = obj.get_estado_display()
@@ -517,6 +531,7 @@ class ProductoAdmin(admin.ModelAdmin):
             'all': ('admin_personalizado/css_panel/agregar_forms.css','admin_personalizado/css_panel/acc_user.css')
         }
 
+    # --- SOBRESCRIBIR LA ACCIÓN 'delete_selected' ---
     def delete_selected(self, request, queryset):
         deleted_count, _ = queryset.delete()
         self.message_user(request, ngettext(
@@ -564,14 +579,20 @@ class ProductoAdmin(admin.ModelAdmin):
     
     
     def download_products_pdf_all(sefl, request,):
+                # Obtener todos los productos y agruparlos por categoría
+        # Asegúrate de que 'categoria' en tu modelo Producto es un campo.
+        # Si 'categoria' es un CharField con choices, el get_categoria_display() es útil.
         all_products = Producto.objects.all().order_by('categoria', 'titulo')
 
         # Agrupar productos por categoría
         products_by_category = defaultdict(list)
         for product in all_products:
+            # Usar get_categoria_display() para el nombre legible de la categoría
             category_name = product.get_categoria_display()
             products_by_category[category_name].append(product)
 
+        # Puedes convertir defaultdict a un listado de tuplas (nombre_categoria, lista_productos)
+        # y ordenarlas alfabéticamente por nombre de categoría si lo deseas.
         sorted_categories = sorted(products_by_category.items(), key=lambda item: item[0])
 
         context = {
@@ -591,7 +612,8 @@ class ProductoAdmin(admin.ModelAdmin):
 
     def changelist_view(self, request, extra_context=None):
         extra_context = extra_context or {}
-        
+        # Asegúrate de que esta línea exista, si no la tienes, agrégala.
+        # Tu changelist_view ya la tenía, solo es para recordatorio.
         extra_context['categorias'] = Producto.CATEGORIAS
 
         # URL para el botón de descarga global

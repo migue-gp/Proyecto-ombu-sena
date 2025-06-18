@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{% static '/css/Productos_Styles.css' %}" type="text/css" />
     <link rel="stylesheet" href="{% static '/css/index.css' %}">
     <link rel="stylesheet" href="{% static '/css/accesibilidad.css' %}">
-    <link rel="stylesheet" href="{% static '/css/buscador.css' %}">
+    <link rel="stylesheet" href="{% static '/css/buscadorcl.css' %}">
   </head>
   <body>
     <header></header>
@@ -20,7 +20,7 @@
     </style>
     <main>
       <div class="menu-container">
-
+ 
 
 
         <div>
@@ -139,34 +139,29 @@
 {% comment %} <!-- -------------------------------------------------------------------------------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------------------------------------------------------------------------------- --> {% endcomment %}
 
-        <div class="cards-container" >
-
-
-
-    {% comment %} Productos       {% endcomment %}
-
-             {% for producto in productos %}
-  <div class="card" data-title="{{ producto.titulo }}" data-image="{{ producto.foto.url }} " data-options='{{ producto.opciones|safe }}'>
-    <div class="img-container">
-      <img src="{{ producto.foto.url }}" alt="{{ producto.titulo }}" />
+    <div class="cards-container" >
+              <!-- aqui productos -->
+      {% for producto in productos %}
+        <div class="card" data-title="{{ producto.titulo }}" data-image="{{ producto.foto.url }} " data-options='{{ producto.opciones|safe }}'>
+          <div class="img-container">
+            <img src="{{ producto.foto.url }}" alt="{{ producto.titulo }}" />
+          </div>
+        
+          <div class="main-card">
+            <span>{{ producto.titulo|upper }}</span>
+            <p class="truncated-text">
+              {{ producto.descripcion|truncatechars:250 }}
+            </p>
+          </div>
+          <div class="footer-card">
+            <button>ver mas</button>
+          </div>
+        </div>
+      {% empty %}
+        <p>No hay productos disponibles en esta categoría.</p>
+      {% endfor %}
+      
     </div>
-
-    <div class="main-card">
-      <span>{{ producto.titulo|upper }}</span>
-      <p class="truncated-text">
-        {{ producto.descripcion|truncatechars:250 }}
-      </p>
-    </div>
-    <div class="footer-card">
-      <button>ver mas</button>
-    </div>
-  </div>
-</div>
-{% empty %}
-  <p>No hay productos disponibles en esta categoría.</p>
-{% endfor %}
-
-</div>
 
   
 
@@ -180,15 +175,12 @@
                   <h2 id="modal-title"></h2>
                   <p>{{ producto.descripcion }}</p>
                   <h4 class="opcion">opciones</h4>
-                  <select id="modal-select"></select>
-                  
+                  <select id="modal-select"></select>  
               </div>
-          </div>
-
-          
+          </div>    
       </div>
     {% endfor %}  
-      </section>
+    </section>
       
 
       <script src="{% static '/js/menu_cliente.js' %}"></script>

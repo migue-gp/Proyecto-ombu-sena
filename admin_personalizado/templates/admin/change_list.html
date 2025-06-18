@@ -158,7 +158,7 @@
                             <h3>Por Estado</h3>
                             <ul>
                                 <li><a href="?estado__exact=disponible{% for key, value in cl.params.items %}{% if key != 'estado__exact' and key != 'q' and key != 'p' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Disponible</a></li>
-                                <li><a href="?estado__exact=agotado{% for key, value in cl.params.items %}{% if key != 'estado__exact' and key != 'q' and key != 'p' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Agotado</a></li>
+                                <li><a href="?estado__exact=no_disponible{% for key, value in cl.params.items %}{% if key != 'estado__exact' and key != 'q' and key != 'p' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">No Disponible</a></li>
                                 <li><a href="?{% for key, value in cl.params.items %}{% if key != 'estado__exact' and key != 'q' and key != 'p' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">Todos</a></li>
                             </ul>
                         </div>

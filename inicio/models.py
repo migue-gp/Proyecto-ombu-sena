@@ -118,19 +118,27 @@ class Producto(models.Model):
     cantidad_disponible = models.IntegerField(default=0, help_text="Cantidad de productos disponibles")
     estado = models.CharField(max_length=20, choices=ESTADOS, default='disponible')
     foto = models.ImageField(upload_to='productos/')
-    categoria = models.CharField(max_length=30, choices=CATEGORIAS)
     opciones = models.TextField(blank=True,help_text="Escribe las opciones separadas por comas. Ej: Capuchino vainilla, Capuchino caramelo") # lista de strings    
     
     
     categoria = models.CharField(
-        max_length=50, # Ajusta la longitud máxima según tus categorías
+        max_length=50, 
         choices=CATEGORIAS,
-        default='bebida_fria' # Establece un valor por defecto si lo deseas
+        default='bebida_fria' 
     )
     
     def __str__(self):
         return self.titulo
 
+
+    def save(self, *args, **kwargs):
+
+        if self.cantidad_disponible == 0:
+            self.estado = 'no_disponible'
+        elif self.cantidad_disponible > 0 and self.estado == 'no_disponible':
+            self.estado = 'disponible'
+
+        super().save(*args, **kwargs) 
 
 # -------------------------PEDIDOS-------------------------------------------------------------
 class Pedido(models.Model):

@@ -9,11 +9,9 @@ document.addEventListener("DOMContentLoaded", () => {
         currentPriceDisplay: '',
         basePrice: 0
     };
-
     // Obtener el mesaId y mesaNumero de la URL al cargar la página
     let mesaIdActiva = getUrlParameter('mesa_id') || localStorage.getItem('mesaActivaId');
     let mesaNumeroActivo = getUrlParameter('mesa_numero') || localStorage.getItem('mesaActivaNumero');
-
     // Referencias a elementos del DOM
     const modalPrice = document.createElement('div');
     const cards = document.querySelectorAll(".card");
@@ -23,7 +21,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const modalSelect = document.getElementById("modal-select");
     const closeModal = document.querySelector(".close");
     const modalAvailableQuantity = document.getElementById("modal-available-quantity");
-
     let modalAddToCartBtn = document.getElementById("modal-add-to-cart");
     if (!modalAddToCartBtn) {
         modalAddToCartBtn = document.createElement('button');
@@ -99,9 +96,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (checkoutButton && mesaNumeroActivo) {
-        checkoutButton.textContent = "Finalizar compra en mesa " + mesaNumeroActivo;
+        checkoutButton.textContent = "Agregar al pedido de mesa " + mesaNumeroActivo;
     } else if (checkoutButton) {
-        checkoutButton.textContent = "Finalizar compra";
+        checkoutButton.textContent = "Agregar al pedido";
     }
 
     function getUrlParameter(name) {
@@ -207,7 +204,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const existingItemIndex = cart.findIndex(item => item.id == productId && item.option === 'Regular'); 
             const currentQuantityInCart = existingItemIndex !== -1 ? cart[existingItemIndex].quantity : 0;
             console.log("Cantidad actual en el carrito para este producto:", currentQuantityInCart);
-
             // <--- CAMBIO CLAVE AQUÍ: La condición para permitir añadir
             if (currentQuantityInCart >= initialBackendQuantity) { // Comparar con el stock total del backend
                 console.warn("ALERTA: Cantidad en carrito (" + currentQuantityInCart + ") ya es >= al stock total (" + initialBackendQuantity + ")");
@@ -392,7 +388,6 @@ document.addEventListener("DOMContentLoaded", () => {
             cart.push(cartItem);
             console.log("Producto agregado al carrito por primera vez (modal).");
         }
-
         updateCartDisplay();
         modal.style.display = 'none'; 
         console.log("Estado del carrito después de agregar (modal):", JSON.stringify(cart));
@@ -409,7 +404,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }, 300);
     });
-
+    
     // === Finalizar compra ===
     checkoutButton.addEventListener('click', async function() {
         if (cart.length === 0) {
@@ -422,79 +417,44 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const totalCarrito = cart.reduce((sum, item) => sum + item.quantity * item.price, 0);
+        // --- INICIO DE LA LÓGICA REEMPLAZADA EN script_menu.js ---
+        // Simplemente guarda el carrito en el localStorage de la mesa
+        const clavePedidoMesa = `pedido_mesa_${mesaIdActiva}`;
+        const pedidosExistentes = JSON.parse(localStorage.getItem(clavePedidoMesa)) || [];
 
-        const orderData = {
-            mesa_id: mesaIdActiva,
-            mesa_numero: mesaNumeroActivo, 
-            total: totalCarrito, 
-            medio_pago: "No especificado", 
-            items: cart.map(item => ({
-                producto_id: item.id, 
-                cantidad: item.quantity, 
-                precio_unitario: item.price,
-                option: item.option 
-            }))
-        };
-
-        try {
-            const response = await fetch('/guardar_pedido/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // 'X-CSRFToken': getCookie('csrftoken'), 
-                },
-                body: JSON.stringify(orderData)
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Error desconocido al procesar el pedido en el servidor.');
-            }
-
-            const result = await response.json();
-            console.log('Respuesta del servidor:', result);
-
-            if (result.updated_stock && Array.isArray(result.updated_stock)) {
-                result.updated_stock.forEach(stockUpdate => {
-                    const cardElement = document.querySelector(`.card[data-id="${stockUpdate.product_id}"]`);
-                    if (cardElement) {
-                        // ACTUALIZA el dataset.cantidadDisponible con el nuevo stock real del backend
-                        cardElement.dataset.cantidadDisponible = stockUpdate.new_available_quantity;
-                        updateCardButtonState(cardElement); // Vuelve a calcular y actualizar el UI
-                    }
+        cart.forEach(newItem => {
+            const existingItem = pedidosExistentes.find(
+                p => p.id == newItem.id && p.option === newItem.option
+            );
+            if (existingItem) {
+                existingItem.quantity += newItem.quantity;
+            } else {
+                // Adaptar el formato del carrito al formato del pedido de mesa
+                pedidosExistentes.push({
+                    id: newItem.id,
+                    title: newItem.title,
+                    price: newItem.price,
+                    imgSrc: newItem.imgSrc,
+                    quantity: newItem.quantity,
+                    option: newItem.option || 'Regular'
                 });
             }
+        });
+        localStorage.setItem(clavePedidoMesa, JSON.stringify(pedidosExistentes));
+        // --- FIN DE LA LÓGICA REEMPLAZADA EN script_menu.js ---
 
-            const clavePedidoMesa = `pedido_mesa_${mesaIdActiva}`;
-            const pedidosExistentes = JSON.parse(localStorage.getItem(clavePedidoMesa)) || [];
+        // Mostrar mensaje de confirmación al cliente
+        const totalCarrito = cart.reduce((sum, item) => sum + item.quantity * item.price, 0);
+        alert(`Productos agregados al pedido de la Mesa ${mesaNumeroActivo}.\nTotal agregado: $${totalCarrito.toFixed(3)}\n\nPara finalizar el pedido, vaya a la vista de mesas.`);
 
-            cart.forEach(newItem => {
-                const existingItem = pedidosExistentes.find(
-                    p => p.id == newItem.id && p.option === newItem.option
-                );
-                if (existingItem) {
-                    existingItem.quantity += newItem.quantity;
-                } else {
-                    pedidosExistentes.push({ ...newItem });
-                }
-            });
-            localStorage.setItem(clavePedidoMesa, JSON.stringify(pedidosExistentes));
+        // Limpiar el carrito local del cliente
+        cart = [];
+        updateCartDisplay();
+        closeCart();
+        localStorage.removeItem('cart');
 
-            alert(`Pedido #${result.order_id} finalizado para la Mesa ${mesaNumeroActivo}.`);
-
-            cart = []; 
-            updateCartDisplay(); 
-            closeCart();
-            localStorage.removeItem('cart'); 
-
-            if (confirm('¿Desea volver a la página de mesas?')) {
-                window.location.href = `/mesas/?mesa_id=${mesaIdActiva}&mesa_numero=${mesaNumeroActivo}`;
-            }
-
-        } catch (error) {
-            console.error('Error al finalizar la compra:', error);
-            alert(`Hubo un error al procesar su pedido: ${error.message}`);
+        if (confirm('¿Desea volver a la página de mesas para ver el pedido?')) {
+            window.location.href = `/mesas/?mesa_id=${mesaIdActiva}&mesa_numero=${mesaNumeroActivo}`;
         }
     });
 
@@ -516,7 +476,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             cartCount.classList.remove('cart-icon-hidden');
         }
-
         if (cart.length === 0) {
             cartItems.innerHTML = '<div class="empty-cart-message" style="text-align: center; padding: 20px; color: #aaa;">Su carrito está vacío</div>';
             cartTotalAmount.textContent = '$0';
@@ -526,7 +485,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             return;
         }
-
         cart.forEach(item => {
             const cartItemElement = document.createElement('div');
             cartItemElement.className = 'cart-item';
@@ -551,7 +509,6 @@ document.addEventListener("DOMContentLoaded", () => {
             `;
             cartItems.appendChild(cartItemElement);
         });
-
         const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
         cartTotalAmount.textContent = `$${total.toFixed(3)}`;
 
@@ -575,7 +532,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const card = document.querySelector(`.card[data-id="${id}"]`);
                     // <--- CAMBIO CLAVE AQUÍ: Usar initialBackendQuantity (stock total)
                     const initialBackendQuantity = parseInt(card.dataset.cantidadDisponible); 
-                    
+                
                     console.log("--- Intento de aumentar desde carrito ---");
                     console.log("Product ID:", id);
                     console.log("Cantidad actual en carrito:", item.quantity);
@@ -596,7 +553,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
         });
-
         cartItems.querySelectorAll('.decrease-quantity').forEach(button => {
             button.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
@@ -615,7 +571,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
         });
-
         cartItems.querySelectorAll('.remove-item').forEach(button => {
             button.addEventListener('click', function() {
                 const id = this.getAttribute('data-id');
@@ -633,22 +588,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Comentado la función getCookie si no se va a usar CSRF aquí
-    // function getCookie(name) {
-    //     let cookieValue = null;
-    //     if (document.cookie && document.cookie !== '') {
-    //         const cookies = document.cookie.split(';');
-    //         for (let i = 0; i < cookies.length; i++) {
-    //             const cookie = cookies[i].trim();
-    //             if (cookie.startsWith(name + '=')) {
-    //                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //     return cookieValue;
-    // }
-
     const menuToggle = document.getElementById('menuToggle');
     const mainMenu = document.getElementById('mainMenu');
     const hamburgerBtn = document.querySelector('.hamburger-btn');
@@ -660,7 +599,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 hamburgerBtn.classList.toggle('active');
             }
         });
-
         document.querySelectorAll('.link').forEach(link => {
             link.addEventListener('click', function() {
                 if (window.innerWidth <= 600) {
@@ -671,7 +609,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             });
         });
-
         document.addEventListener('click', function(event) {
             const isClickInsideMenu = mainMenu.contains(event.target);
             const isClickOnToggle = menuToggle.contains(event.target);
@@ -685,13 +622,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
     }
-
     const menuContainer = document.querySelector(".menu-container");
     const mainContentArea = document.querySelector("main");
-
     if (menuContainer && mainContentArea) {
         let lastScrollTop = 0;
-
         function handleScroll() {
             if (window.innerWidth <= 767) {
                 menuContainer.classList.remove("menu-fixed", "menu-hidden");
@@ -711,13 +645,10 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 menuContainer.classList.remove("menu-hidden");
             }
-
             lastScrollTop = currentScrollTop;
         }
-
         mainContentArea.addEventListener("scroll", handleScroll);
         window.addEventListener("scroll", handleScroll);
     }
-
     updateCartDisplay();
 });
