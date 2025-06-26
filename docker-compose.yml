@@ -10,20 +10,36 @@ services:
       POSTGRES_USER: ombu
       POSTGRES_PASSWORD: ombu123
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - pg_ombu_data:/var/lib/postgresql/data
+    networks:
+      - ombu_network # Conecta a la misma red que la app para que puedan comunicarse.
+
 
   web:
     build: .
+    container_name: django_ombu
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
     ports:
-      - "8000:8000"
+      - "8011:8000"
     depends_on:
       - db
+    environment:
+      DB_NAME: ombu
+      DB_USER: ombu
+      DB_PASSWORD: ombu123
+      DB_HOST: db
+      DB_PORT: 5432
+    networks:
+      - ombu_network # Conecta Nginx a la misma red que la app para que puedan comunicarse.
 
 volumes:
-
   pg_ombu_data:
+  
+# --- Definiciones Globales ---
+networks:
+    ombu_network: # Declara nuestra red personalizada.
+        driver: bridge # Usa el driver estándar 'bridge'.

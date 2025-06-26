@@ -1,15 +1,20 @@
-# Usa una imagen oficial de Python
 FROM python:3.11-slim
 
-# Establece el directorio de trabajo
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
 WORKDIR /app
 
-# Copia requirements y los instala
+# Instala dependencias del sistema requeridas para psycopg2-binary
+RUN apt-get update && apt-get install -y \
+    libpq-dev \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copia el resto del proyecto
-COPY . .
 
-# Expone el puerto de Django
 EXPOSE 8000
+
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
