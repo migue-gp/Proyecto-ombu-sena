@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-cgm-7*+at&4ptfsq(tjav&n!@3@6c!qw6jbc43$20+&g0yqw*p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -88,11 +88,11 @@ WSGI_APPLICATION = 'ombu.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'ombu',
-        'USER': 'ombu',
-        'PASSWORD': 'ombu123',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': os.getenv("DB_NAME", "ombu"),
+        'USER': os.getenv("DB_USER", "ombu"),
+        'PASSWORD': os.getenv( "DB_PASSWORD", "ombu123"),
+        'HOST': os.getenv ("DB_HOST", "db"),
+        'PORT': os.getenv ("DB_PORT", "5432"),
     }
 }
 
@@ -164,3 +164,8 @@ EMAIL_USE_TLS = True
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+#Trusted origins domain
+CSRF_TRUSTED_ORIGINS = [
+    "https://adsoombu.artisandev.site",
+]

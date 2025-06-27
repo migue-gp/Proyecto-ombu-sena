@@ -42,4 +42,4 @@ volumes:
 # --- Definiciones Globales ---
 networks:
     ombu_network: # Declara nuestra red personalizada.
-        driver: bridge # Usa el driver estándar 'bridge'.
+        driver: bridge # Usa el driver estándar 'bridge'
